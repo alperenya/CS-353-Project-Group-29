@@ -1,4 +1,4 @@
-## Welcome to GitHub Pages
+## Database
 
 You can use the [editor on GitHub](https://github.com/alperenya/CS-353-Project-Group-29/edit/gh-pages/index.md) to maintain and preview the content for your website in Markdown files.
 
