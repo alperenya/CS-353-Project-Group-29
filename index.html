@@ -77,7 +77,10 @@ This report describes various features of a hospital database system. The report
 
 <h3>2. PROJECT DESCRIPTION</h3>
 <p>
-	INSERT HERE
+	Hospital database management system is a web application to observe and manage entities that are part of the hospital environment by application users such as patients, doctors, and laboratorians. The application handles the data such as patients, doctors, laboratorians, tests, test results, interactions between those, and many other data that are part of the hospital environment. A patient can book an appointment with a particular doctor and share his/her symptoms with the doctor using the system. The doctor can ask for necessary tests after an appointment to examine the disease further and choose appropriate treatment or drugs from the database after diagnosis.<br>
+	A variety of information needs to be stored and structured in a hospital environment for users to carry out complicated operations safely and efficiently. For instance, a doctor can assign a test after the examination. A laboratorian carries out the given test, which makes him responsible for that particular test result, or a patient can check his/her prescribed drugs using the system. It is hard to handle such massive data that many people will be using every day without an online database system.<br>
+	As a system with a high amount of essential data, we will distinguish entities and establish relations between them in a precise manner. To protect the integrity of that critical information, we will be setting strict relation constraints. The application user will be able to take high-level actions using the application according to their respective authorization level. Those operations will then be evaluated and carried out as low-level operations such as display, add, delete, and modify on the data stored in the database.
+
 </p>
 
 <h3>3. REQUIREMENTS</h3>
@@ -85,7 +88,28 @@ This report describes various features of a hospital database system. The report
 <h4>	3.1 Functional Requirements</h4>
 
 <ol>
-	<li>INSERT HERE</li>
+	<li>Security & Authentication</li>
+	<ul>
+		<li>Access permissions should only be changed by the administrator.</li>
+		<li>Users should only be able to log in to the system with their own passwords and use the features provided by the system.</li>
+ 		<li>Access to user information should only be done in the manner of the administrator, and the information should not be shared.</li>
+ 		<li>Password quality must be above a certain standard: at least one uppercase letter, one digit, etc.</li>
+	</ul>
+	<li>User Friendliness</li>
+	<ul>
+		<li>The appointment system should have a non-confusing and relatively simple interface.</li>
+		<li>The patient should be able to get a better user experience by making the necessary filtering while making an appointment.</li>
+	</ul>
+	<li>Reliability</li>
+	<ul>
+		Users may knowingly or unknowingly make mistakes while using the system:
+		<li>In order that these errors do not prevent the system from not working, the system should never fail. It should continue working in any case and keep the information it contains for the desired period.</li>
+	</ul>
+	<li>Capacity</li>
+	<ul>
+		<li>Since the system contains many components in a hospital, the provided big data must be properly hosted. </li>
+	</ul>
+	
 </ol>
 
 
