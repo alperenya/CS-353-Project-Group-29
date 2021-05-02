@@ -1,4 +1,6 @@
 <?php
+include("config.php");
+
 // Initialize the session
 session_start();
 
@@ -7,15 +9,6 @@ if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true) {
     header("location: index.php");
     exit;
 }
-
-//Required parameters for connection
-$servername = "localhost";
-$username = "root";
-$password = "";
-$db = "HMS";
-
-//Connect to remote database at djikstra using credentials
-$con = new mysqli($servername, $username, $password, $db);
 
 //Check if connection is successfull
 if ($con->connect_error) {

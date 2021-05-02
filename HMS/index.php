@@ -1,21 +1,13 @@
 <?php
+include("config.php");
 // Initialize the session
 session_start();
 
-// Check if the user is already logged in, if yes then redirect to management page
+// Check if the user is already logged in, if yes then redirect to logout
 if (isset($_SESSION["loggedin"]) && $_SESSION["loggedin"] === true) {
     header("location: logout.php");
     exit;
 }
-
-//Required parameters for connection
-$servername = "localhost";
-$username = "root";
-$password = "";
-$db = "HMS";
-
-//Connect database using credentials
-$con = new mysqli($servername, $username, $password, $db);
 
 //Check if connection is successfull
 if ($con->connect_error) {
@@ -59,16 +51,16 @@ function Login($con){
             $_SESSION["message"] = "";
             $_SESSION["type"] = $_POST["type"];
             
-            //Close connection to database and redirect user to management page.
+            //Close connection to database and redirect user to corresponding page.
             $con->close();
             switch ($_SESSION["type"]){
-                case "Patient":
+                case "patient":
                     header("location: patient.php");
                     break;
-                case "Doctor":
+                case "doctor":
                     header("location: doctor.php");
                     break;
-                case "Laboratorian":
+                case "laboratorian":
                     header("location: laboratorian.php");
                     break;
             }
@@ -126,11 +118,12 @@ function Login($con){
         <div class="form-group"><input name="password" id="password" class="form-control" type="password"
                                        placeholder="Password">
         </div>
-        <select name="type">
-            <option value="Patient">Patient</option>
-            <option value="Doctor">Doctor</option>
-            <option value="Laboratorian">Laboratorian</option>
-        </select>
+        <input type="radio" id="patient" name="type" value="patient">
+        <label for="patient">Patient</label><br>
+        <input type="radio" id="doctor" name="type" value="doctor">
+        <label for="doctor">Doctor</label><br>
+        <input type="radio" id="laboratorian" name="type" value="laboratorian">
+        <label for="laboratorian">Laboratorian</label>
         <div class="form-group">
             <div class="form-group">
                 <button class="btn btn-primary btn-block" type="submit" style="background: var(--blue);">Log In<i
