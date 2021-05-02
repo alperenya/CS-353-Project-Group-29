@@ -30,33 +30,32 @@ $con->close();
 
 function Login($con){
     //Check if username and password received successfully
-    if (!array_key_exists("username", $_POST) || !array_key_exists("password", $_POST)) {
-        echo "<script type='text/javascript'>alert('Could not receive username and/or password!');</script>";
+    if (!array_key_exists("person_id", $_POST) || !array_key_exists("password", $_POST)) {
+        echo "<script type='text/javascript'>alert('Could not receive person_id and/or password!');</script>";
         return;
     }
 
     //Sanitize the inputs
-    $sanitizedUsername = htmlspecialchars($_POST["username"]);
+    $sanitizedPersonID = htmlspecialchars($_POST["person_id"]);
     $sanitizedPassword = htmlspecialchars($_POST["password"]);
 
     //Error messaage response variable
-    $responseMessage = "'The user " . $sanitizedUsername . " does not exist in database.'";
+    $responseMessage = "'The user " . $sanitizedPersonID . " does not exist in database.'";
 
     // Perform query
-    if ($result = $con->query("SELECT sid FROM student where LOWER(sname)=LOWER ('" . $sanitizedUsername . "') LIMIT 1;")) {
+    if ($result = $con->query("SELECT password FROM Persons where LOWER(person_id)=LOWER ('" . $sanitizedPersonID . "') LIMIT 1;")) {
         if ($result->num_rows <= 0) {
             echo "<script type='text/javascript'>alert($responseMessage);</script>";
             return;
         }
-        $sid = $result->fetch_assoc();
-        if ($sid["sid"] == $sanitizedPassword) {
+        $password = $result->fetch_assoc();
+        if ($password["password"] == $sanitizedPassword) {
             // Password is correct, start a new session
             session_start();
 
             // Store data in session variables
             $_SESSION["loggedin"] = true;
-            $_SESSION["id"] = $sanitizedPassword;
-            $_SESSION["username"] = $sanitizedUsername;
+            $_SESSION["person_id"] = $sanitizedPersonID;
             $_SESSION["newmessage"] = false;
             $_SESSION["message"] = "";
 
@@ -64,7 +63,7 @@ function Login($con){
             $con->close();
             header("Location: management.php");
         } else {
-            $responseMessage = "'Password for user " . $sanitizedUsername . " does not match.'";
+            $responseMessage = "'Password for user " . $sanitizedPersonID . " does not match.'";
             echo "<script type='text/javascript'>alert($responseMessage);</script>";
 
         }
@@ -112,10 +111,10 @@ function Login($con){
         <div class="illustration">
             <h3 style="color: var(--blue);font-weight: bold;font-style: normal;text-align: center;">LOG IN</h3>
         </div>
-        <div class="form-group"><input name="username" id="username" class="form-control" type="text"
-                                       placeholder="Username"></div>
+        <div class="form-group"><input name="person_id" id="person_id" class="form-control" type="text"
+                                       placeholder="Person ID"></div>
         <div class="form-group"><input name="password" id="password" class="form-control" type="password"
-                                       placeholder="ID">
+                                       placeholder="Password">
         </div>
         <div class="form-group">
             <div class="form-group">
@@ -129,7 +128,7 @@ function Login($con){
 
 <script type="text/javascript">
     //Form fields
-    const usernameInput = document.getElementById("username");
+    const usernameInput = document.getElementById("person_id");
     const passwordInput = document.getElementById("password");
     const loginForm = document.getElementById('login-form')
 

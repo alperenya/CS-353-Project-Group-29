@@ -9,10 +9,10 @@ if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true) {
 }
 
 //Required parameters for connection
-$servername = "dijkstra.ug.bcc.bilkent.edu.tr";
-$username = "oguzhan.angin";
-$password = "3366Ioem";
-$db = "oguzhan_angin";
+$servername = "localhost";
+$username = "root";
+$password = "";
+$db = "HMS";
 
 //Connect to remote database at djikstra using credentials
 $con = new mysqli($servername, $username, $password, $db);
