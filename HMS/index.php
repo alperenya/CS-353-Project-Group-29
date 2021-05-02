@@ -4,7 +4,7 @@ session_start();
 
 // Check if the user is already logged in, if yes then redirect to management page
 if (isset($_SESSION["loggedin"]) && $_SESSION["loggedin"] === true) {
-    header("location: management.php");
+    header("location: logout.php");
     exit;
 }
 
@@ -50,18 +50,28 @@ function Login($con){
         }
         $password = $result->fetch_assoc();
         if ($password["password"] == $sanitizedPassword) {
-            // Password is correct, start a new session
-            session_start();
+
 
             // Store data in session variables
             $_SESSION["loggedin"] = true;
             $_SESSION["person_id"] = $sanitizedPersonID;
             $_SESSION["newmessage"] = false;
             $_SESSION["message"] = "";
-
+            $_SESSION["type"] = $_POST["type"];
+            
             //Close connection to database and redirect user to management page.
             $con->close();
-            header("Location: management.php");
+            switch ($_SESSION["type"]){
+                case "Patient":
+                    header("location: patient.php");
+                    break;
+                case "Doctor":
+                    header("location: doctor.php");
+                    break;
+                case "Laboratorian":
+                    header("location: laboratorian.php");
+                    break;
+            }
         } else {
             $responseMessage = "'Password for user " . $sanitizedPersonID . " does not match.'";
             echo "<script type='text/javascript'>alert($responseMessage);</script>";
@@ -116,6 +126,11 @@ function Login($con){
         <div class="form-group"><input name="password" id="password" class="form-control" type="password"
                                        placeholder="Password">
         </div>
+        <select name="type">
+            <option value="Patient">Patient</option>
+            <option value="Doctor">Doctor</option>
+            <option value="Laboratorian">Laboratorian</option>
+        </select>
         <div class="form-group">
             <div class="form-group">
                 <button class="btn btn-primary btn-block" type="submit" style="background: var(--blue);">Log In<i

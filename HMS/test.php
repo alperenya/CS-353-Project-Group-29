@@ -18,7 +18,8 @@ if ($con->connect_error) {
 }
 
 //if ($result = $con->query("CREATE TABLE persons (person_id CHAR(11) PRIMARY KEY, first_name VARCHAR(20) NOT NULL, last_name VARCHAR(20) NOT NULL, sex VARCHAR(20) NOT NULL, phone VARCHAR(50) NOT NULL, email VARCHAR(20) NOT NULL, password VARCHAR(50) NOT NULL) ENGINE=INNODB;" )) {
-if ($result = $con->query("INSERT INTO persons VALUES ('12345678900', 'Alperen', 'Yalcin', 'Male', '5000000000', 'alperen@email.com', 'alperen' );")){
+//if ($result = $con->query("INSERT INTO persons VALUES ('12345678900', 'Alperen', 'Yalcin', 'Male', '5000000000', 'alperen@email.com', 'alperen' );")){
+if ($result = $con->query("INSERT INTO doctors VALUES ('12345678900', 'aile hekimi' );")){    
     echo "alpere";
 } else {
     echo "agacım";
