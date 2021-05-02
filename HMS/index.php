@@ -51,25 +51,53 @@ function Login($con){
             $_SESSION["message"] = "";
             $_SESSION["type"] = $_POST["type"];
             
-            //Close connection to database and redirect user to corresponding page.
-            $con->close();
+            $sqlDoctor = "SELECT D.person_id FROM doctors D WHERE D.person_id = " . $_SESSION["person_id"] . "";
+            $sqlPatient = "SELECT P.person_id FROM patients P WHERE P.person_id = " . $_SESSION["person_id"] . "";
+            $sqlLab = "SELECT L.person_id FROM laboratorians L WHERE L.person_id = " . $_SESSION["person_id"] . "";
+            $responseMessage2 = "'The user " . $sanitizedPersonID . " does not exist in " . $_SESSION["type"] . " database.'";
+
+            
             switch ($_SESSION["type"]){
                 case "patient":
-                    header("location: patient.php");
-                    break;
+                    if($result2 = $con->query($sqlPatient)){
+                        if ($result2->num_rows <= 0) {
+                            echo "<script type='text/javascript'>alert($responseMessage2);</script>";
+                            return;
+                        }else{
+                            header("location: patient.php");
+                            break;
+                        }  
+                    }
                 case "doctor":
-                    header("location: doctor.php");
-                    break;
+                    if($result2 = $con->query($sqlDoctor)){
+                        if ($result2->num_rows <= 0) {
+                            echo "<script type='text/javascript'>alert($responseMessage2);</script>";
+                            return;
+                        }else{
+                            header("location: doctor.php");
+                            break;
+                        }  
+                    }
                 case "laboratorian":
-                    header("location: laboratorian.php");
-                    break;
+                    if($result2 = $con->query($sqlLab)){
+                        if ($result2->num_rows <= 0) {
+                            echo "<script type='text/javascript'>alert($responseMessage2);</script>";
+                            return;
+                        }else{
+                            header("location: laboratorian.php");
+                            break;
+                        }  
+                    }
+                
             }
+            
         } else {
             $responseMessage = "'Password for user " . $sanitizedPersonID . " does not match.'";
             echo "<script type='text/javascript'>alert($responseMessage);</script>";
 
         }
         $result->free_result();
+        $con->close();
         return;
     } else {
         echo "<script type='text/javascript'>alert('Login failed for some internal issue.');</script>";
