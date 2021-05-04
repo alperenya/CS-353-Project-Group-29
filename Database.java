@@ -56,163 +56,163 @@ class Database {
                     " ENGINE=InnoDB;";
             stmt.executeUpdate(pharmacists);
 
-            String appointment = "CREATE TABLE examination(\n" +
-                    "\texam_id\t\tCHAR(11) PRIMARY KEY\n" +
-                    "\tdate\t\ttimestamp NOT NULL,\n";
+            String appointment = "CREATE TABLE examination(" +
+                    " exam_id CHAR(11) PRIMARY KEY" +
+                    " date timestamp NOT NULL),";
             stmt.executeUpdate(appointment);
 
-            String symptoms = "CREATE TABLE symptoms(\n" +
-                    "\tname\t\tVARCHAR(20) PRIMARY KEY\n";
+            String symptoms = "CREATE TABLE symptoms(" +
+                    " name VARCHAR(20) PRIMARY KEY)";
             stmt.executeUpdate(symptoms);
 
-            String schedule = "CREATE TABLE schedule(\n" +
-                    "\tdate\t\ttimestamp NOT NULL,\n" +
-                    "\toccupation_type\t\tVARCHAR(20) NOT NULL\n";
+            String schedule = "CREATE TABLE schedule(" +
+                    " date timestamp NOT NULL," +
+                    " occupation_type VARCHAR(20) NOT NULL)";
             stmt.executeUpdate(schedule);
 
-            String department = "CREATE TABLE department(\n" +
-                    "\tdepartment_name\t\tVARCHAR(20) PRIMARY KEY\n";
+            String department = "CREATE TABLE department(" +
+                    " department_name VARCHAR(20) PRIMARY KEY)";
             stmt.executeUpdate(department);
 
-            String drugs = "CREATE TABLE drugs(\n" +
-                    "\tdrug_id\t\tCHAR(11) PRIMARY KEY,\n" +
-                    "\tname\t\tVARCHAR(20)\n";
+            String drugs = "CREATE TABLE drugs(" +
+                    " drug_id CHAR(11) PRIMARY KEY," +
+                    " name VARCHAR(20))";
             stmt.executeUpdate(drugs);
 
-            String prescriptions = "CREATE TABLE prescriptions(\n" +
-                    "\tprescription_id\t\tCHAR(11) PRIMARY KEY,\n";
+            String prescriptions = "CREATE TABLE prescriptions(" +
+                    " prescription_id HAR(11) PRIMARY KEY)";
             stmt.executeUpdate(prescriptions);
 
-            String components = "CREATE TABLE components(\n" +
-                    "\tname\t\tVARCHAR(20) PRIMARY KEY,\n" +
-                    "\tinterval_high\t\t NUMERIC(3,2),\n" +
-                    "\tinterval_low\t\t NUMERIC(3,2),\n";
+            String components = "CREATE TABLE components(" +
+                    " name VARCHAR(20) PRIMARY KEY," +
+                    " interval_high NUMERIC(3,2)," +
+                    " interval_low NUMERIC(3,2))";
             stmt.executeUpdate(components);
 
-            String tests = "CREATE TABLE tests(\n" +
-                    "\ttest_id\t\tCHAR(11) PRIMARY KEY,\n" +
-                    "\tname\t\tVARCHAR(20)\n";
+            String tests = "CREATE TABLE tests(" +
+                    " test_id CHAR(11) PRIMARY KEY," +
+                    " name VARCHAR(20))";
             stmt.executeUpdate(tests);
 
-            String results = "CREATE TABLE results(\n" +
-                    "\tresult_id\t\tCHAR(11) PRIMARY KEY,\n" +
-                    "\tlaboratorian_comment\t\tVARCHAR(300)\n" +
-                    "\tdate\t\ttimestamp NOT NULL,\n";
+            String results = "CREATE TABLE results(" +
+                    " result_id CHAR(11) PRIMARY KEY," +
+                    " laboratorian_comment VARCHAR(300)" +
+                    " date timestamp NOT NULL)";
             stmt.executeUpdate(results);
 
-            String diagnosis = "CREATE TABLE diagnosis(\n" +
-                    "\tdiagnosis_id\t\tCHAR(11) PRIMARY KEY,\n" +
-                    "\tcomment\t\tVARCHAR(300)\n";
+            String diagnosis = "CREATE TABLE diagnosis(" +
+                    " diagnosis_id CHAR(11) PRIMARY KEY," +
+                    " comment VARCHAR(300))";
             stmt.executeUpdate(diagnosis);
 
-            String diseases = "CREATE TABLE diseases(\n" +
-                    "\tdiseases_id\t\tCHAR(11) PRIMARY KEY,\n" +
-                    "\tname\t\tVARCHAR(20)\n";
+            String diseases = "CREATE TABLE diseases(" +
+                    " diseases_id CHAR(11) PRIMARY KEY," +
+                    " name VARCHAR(20))";
             stmt.executeUpdate(diseases);
 
-            String symptoms_of = "CREATE TABLE symptoms_of(\n" +
-                    "\texam_id\t\tCHAR(11),\n" +
-                    "\tname\t\tVARCHAR(20),\n" +
-                    "PRIMARY KEY (exam_id, name),\n" +
-                    "FOREIGN KEY (exam_id) references appointment(exam_id),\n" +
-                    "FOREIGN KEY (name) references symptoms(name)ENGINE=InnoDB\n";
+            String symptoms_of = "CREATE TABLE symptoms_of(" +
+                    " exam_id CHAR(11)," +
+                    " name VARCHAR(20)," +
+                    " PRIMARY KEY (exam_id, name)," +
+                    " FOREIGN KEY (exam_id) references appointment(exam_id)," +
+                    " FOREIGN KEY (name) references symptoms(name))ENGINE=InnoDB";
             stmt.executeUpdate(symptoms_of);
 
-            String appointment_of = "CREATE TABLE appointment_of(\n" +
-                    "\texam_id\t\tCHAR(11),\n" +
-                    "PRIMARY KEY (exam_id),\n" +
-                    "FOREIGN KEY (exam_id) references appointment(exam_id)ENGINE=InnoDB\n";
+            String appointment_of = "CREATE TABLE appointment_of(" +
+                    " exam_id CHAR(11)," +
+                    " PRIMARY KEY (exam_id)," +
+                    " FOREIGN KEY (exam_id) references appointment(exam_id))ENGINE=InnoDB";
             stmt.executeUpdate(appointment_of);
 
-            String processed_by = "CREATE TABLE processed_by(\n" +
-                    "\tprescription_id\t\tCHAR(11),\n" +
-                    "PRIMARY KEY (prescription_id),\n" +
-                    "FOREIGN KEY (prescription_id) references prescription(prescription_id)ENGINE=InnoDB\n";
+            String processed_by = "CREATE TABLE processed_by(" +
+                    " prescription_id CHAR(11)," +
+                    " PRIMARY KEY (prescription_id)," +
+                    " FOREIGN KEY (prescription_id) references prescription(prescription_id))ENGINE=InnoDB";
             stmt.executeUpdate(processed_by);
 
-            String department_of = "CREATE TABLE department_of(\n" +
-                    "\tdepartment_name\t\tCHAR(11),\n" +
-                    "PRIMARY KEY (department_name),\n" +
-                    "FOREIGN KEY (department_name) references department(department_name)ENGINE=InnoDB\n";
+            String department_of = "CREATE TABLE department_of(" +
+                    " department_name CHAR(11)," +
+                    " PRIMARY KEY (department_name)," +
+                    " FOREIGN KEY (department_name) references department(department_name))ENGINE=InnoDB";
             stmt.executeUpdate(department_of);
 
-            String schedule_of = "CREATE TABLE schedule_of(\n"; //?
+            String schedule_of = "CREATE TABLE schedule_of"; //?
             stmt.executeUpdate(schedule_of);
 
-            String alternative_drug = "CREATE TABLE alternative_drug(\n" +
-                    "\tdrug_id\t\tCHAR(11),\n" +
-                    "\talternative_drug_id\t\tCHAR(11),\n" +
-                    "PRIMARY KEY (drug_id, alternative_drug_id),\n" + //?
-                    "FOREIGN KEY (alternative_drug_id) references drugs(drug_id),\n" + //?
-                    "FOREIGN KEY (drug_id) references drugs(drug_id)ENGINE=InnoDB\n";
+            String alternative_drug = "CREATE TABLE alternative_drug(" +
+                    " drug_id CHAR(11)," +
+                    " alternative_drug_id CHAR(11)," +
+                    " PRIMARY KEY (drug_id, alternative_drug_id)," + //?
+                    " FOREIGN KEY (alternative_drug_id) references drugs(drug_id)," + //?
+                    " FOREIGN KEY (drug_id) references drugs(drug_id))ENGINE=InnoDB";
             stmt.executeUpdate(alternative_drug);
 
-            String prescribed = "CREATE TABLE prescribed(\n" +
-                    "\tprescription_id\t\tCHAR(11),\n" +
-                    "PRIMARY KEY (prescription_id),\n" +
-                    "FOREIGN KEY (prescription_id) references prescription(prescription_id)ENGINE=InnoDB\n";
+            String prescribed = "CREATE TABLE prescribed(" +
+                    " prescription_id CHAR(11)," +
+                    " PRIMARY KEY (prescription_id)," +
+                    " FOREIGN KEY (prescription_id) references prescription(prescription_id))ENGINE=InnoDB";
             stmt.executeUpdate(prescribed);
 
-            String test_component = "CREATE TABLE test_component(\n" +
-                    "\ttest_id\t\tCHAR(11),\n" +
-                    "\tname\t\tVARCHAR(20),\n" +
-                    "PRIMARY KEY (prescription_id, name),\n" +
-                    "FOREIGN KEY (name) references symptoms(name),\n" +
-                    "FOREIGN KEY (prescription_id) references prescription(prescription_id)ENGINE=InnoDB\n";
+            String test_component = "CREATE TABLE test_component(" +
+                    " test_id CHAR(11)," +
+                    " name VARCHAR(20)," +
+                    " PRIMARY KEY (prescription_id, name)," +
+                    " FOREIGN KEY (name) references symptoms(name)," +
+                    " FOREIGN KEY (prescription_id) references prescription(prescription_id))ENGINE=InnoDB";
             stmt.executeUpdate(test_component);
 
-            String assigned_tests = "CREATE TABLE assigned_tests(\n" +
-                    "\ttest_id\t\tCHAR(11),\n" +
-                    "\texam_id\t\tCHAR(11),\n" +
-                    "PRIMARY KEY (prescription_id, exam_id),\n" +
-                    "FOREIGN KEY (exam_id) references appointment(exam_id),\n" +
-                    "FOREIGN KEY (test_id) references tests(test_id)ENGINE=InnoDB\n";
+            String assigned_tests = "CREATE TABLE assigned_tests(" +
+                    " test_id CHAR(11)," +
+                    " exam_id CHAR(11)," +
+                    " PRIMARY KEY (prescription_id, exam_id)," +
+                    " FOREIGN KEY (exam_id) references appointment(exam_id)," +
+                    " FOREIGN KEY (test_id) references tests(test_id))ENGINE=InnoDB";
             stmt.executeUpdate(assigned_tests);
 
-            String examination_result = "CREATE TABLE examination_result(\n" +
-                    "\tdiagnosis_id\t\tCHAR(11),\n" +
-                    "\texam_id\t\tCHAR(11),\n" +
-                    "PRIMARY KEY (diagnosis_id, exam_id),\n" +
-                    "FOREIGN KEY (exam_id) references appointment(exam_id),\n" +
-                    "FOREIGN KEY (diagnosis_id) references diagnosis(diagnosis_id)ENGINE=InnoDB\n";
+            String examination_result = "CREATE TABLE examination_result(" +
+                    " diagnosis_id CHAR(11)," +
+                    " exam_id CHAR(11)," +
+                    " PRIMARY KEY (diagnosis_id, exam_id)," +
+                    " FOREIGN KEY (exam_id) references appointment(exam_id)," +
+                    " FOREIGN KEY (diagnosis_id) references diagnosis(diagnosis_id))ENGINE=InnoDB";
             stmt.executeUpdate(examination_result);
 
-            String done_by = "CREATE TABLE done_by(\n" +
-                    "\tresult_id\t\tCHAR(11),\n" +
-                    "PRIMARY KEY (result_id),\n" +
-                    "FOREIGN KEY (result_id) references results(result_id)ENGINE=InnoDB\n";
+            String done_by = "CREATE TABLE done_by(" +
+                    " result_id CHAR(11)," +
+                    " PRIMARY KEY (result_id)," +
+                    " FOREIGN KEY (result_id) references results(result_id))ENGINE=InnoDB";
             stmt.executeUpdate(done_by);
 
-            String component_result = "CREATE TABLE component_result(\n" +
-                    "\tresult_id\t\tCHAR(11),\n" +
-                    "\tname\t\tVARCHAR(20),\n" +
-                    "\tstatus\t\tVARCHAR(20),\n" +
-                    "\tresult_value\t\tVARCHAR(20),\n" +
-                    "PRIMARY KEY (name, result_id),\n" +
-                    "FOREIGN KEY (name) references components(name),\n" +
-                    "FOREIGN KEY (result_id) references results(result_id)ENGINE=InnoDB\n";
+            String component_result = "CREATE TABLE component_result(" +
+                    " result_id CHAR(11)," +
+                    " name VARCHAR(20)," +
+                    " status VARCHAR(20)," +
+                    " result_value VARCHAR(20)," +
+                    " PRIMARY KEY (name, result_id)," +
+                    " FOREIGN KEY (name) references components(name)," +
+                    " FOREIGN KEY (result_id) references results(result_id))ENGINE=InnoDB";
             stmt.executeUpdate(component_result);
 
-            String test_result = "CREATE TABLE test_result(\n" +
-                    "\tresult_id\t\tCHAR(11),\n" +
-                    "\tprescription_id\t\tCHAR(11),\n" +
-                    "PRIMARY KEY (result_id, prescription_id),\n" +
-                    "FOREIGN KEY (prescription_id) references prescriptions(prescription_id),\n" +
-                    "FOREIGN KEY (result_id) references results(result_id)ENGINE=InnoDB\n";
+            String test_result = "CREATE TABLE test_result(" +
+                    " result_id CHAR(11)," +
+                    " prescription_id CHAR(11)," +
+                    " PRIMARY KEY (result_id, prescription_id)," +
+                    " FOREIGN KEY (prescription_id) references prescriptions(prescription_id)," +
+                    " FOREIGN KEY (result_id) references results(result_id))ENGINE=InnoDB";
             stmt.executeUpdate(test_result);
 
-            String diagnosis_result = "CREATE TABLE diagnosis_result(\n" +
-                    "\tdiagnosis_id\t\tCHAR(11),\n" +
-                    "\tdisease_id\t\tCHAR(11),\n" +
-                    "PRIMARY KEY (result_id, disease_id),\n" +
-                    "FOREIGN KEY (diagnosis_id) references diagnosis(diagnosis_id),\n" +
-                    "FOREIGN KEY (disease_id) references diseases(disease_id)ENGINE=InnoDB\n";
+            String diagnosis_result = "CREATE TABLE diagnosis_result(" +
+                    "diagnosis_id CHAR(11)," +
+                    "disease_id CHAR(11)," +
+                    "PRIMARY KEY (result_id, disease_id)," +
+                    "FOREIGN KEY (diagnosis_id) references diagnosis(diagnosis_id)," +
+                    "FOREIGN KEY (disease_id) references diseases(disease_id))ENGINE=InnoDB";
             stmt.executeUpdate(diagnosis_result);
 
-            String chronic_diseases = "CREATE TABLE chronic_diseases(\n" +
-                    "\tdisease_id\t\tCHAR(11),\n" +
-                    "PRIMARY KEY (disease_id),\n" +
-                    "FOREIGN KEY (disease_id) references diseases(disease_id)ENGINE=InnoDB\n";
+            String chronic_diseases = "CREATE TABLE chronic_diseases(" +
+                    " disease_id CHAR(11)," +
+                    " PRIMARY KEY (disease_id)," +
+                    " FOREIGN KEY (disease_id) references diseases(disease_id))ENGINE=InnoDB";
             stmt.executeUpdate(chronic_diseases);
 
             stmt.executeUpdate("INSERT INTO persons VALUES ('00000000000', 'Alperen', 'Yalcin', 'Male', '5000000000', 'alperen@email.com', '123456');");
