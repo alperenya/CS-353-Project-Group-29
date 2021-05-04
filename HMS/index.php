@@ -54,6 +54,7 @@ function Login($con){
             $sqlDoctor = "SELECT D.person_id FROM doctors D WHERE D.person_id = " . $_SESSION["person_id"] . "";
             $sqlPatient = "SELECT P.person_id FROM patients P WHERE P.person_id = " . $_SESSION["person_id"] . "";
             $sqlLab = "SELECT L.person_id FROM laboratorians L WHERE L.person_id = " . $_SESSION["person_id"] . "";
+            $sqlPha = "SELECT E.person_id FROM pharmacists E WHERE E.person_id = " . $_SESSION["person_id"] . "";
             $responseMessage2 = "'The user " . $sanitizedPersonID . " does not exist in " . $_SESSION["type"] . " database.'";
 
             
@@ -88,6 +89,16 @@ function Login($con){
                             break;
                         }  
                     }
+                case "pharmacist":
+                    if($result2 = $con->query($sqlPha)){
+                        if ($result2->num_rows <= 0) {
+                            echo "<script type='text/javascript'>alert($responseMessage2);</script>";
+                            return;
+                        }else{
+                            header("location: pharmacist.php");
+                            break;
+                        }  
+                    }
                 
             }
             
@@ -97,7 +108,6 @@ function Login($con){
 
         }
         $result->free_result();
-        $con->close();
         return;
     } else {
         echo "<script type='text/javascript'>alert('Login failed for some internal issue.');</script>";
@@ -112,7 +122,7 @@ function Login($con){
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
-    <title>Internship</title>
+    <title>Hospital</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.3/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <style type="text/css">
@@ -151,7 +161,10 @@ function Login($con){
         <input type="radio" id="doctor" name="type" value="doctor">
         <label for="doctor">Doctor</label><br>
         <input type="radio" id="laboratorian" name="type" value="laboratorian">
-        <label for="laboratorian">Laboratorian</label>
+        <label for="laboratorian">Laboratorian</label><br>
+        <input type="radio" id="pharmacist" name="type" value="pharmacist">
+        <label for="pharmacist">Pharmacist</label><br>
+        <p>Don't have an account? <a href="register.php">Sign up</a>.</p>
         <div class="form-group">
             <div class="form-group">
                 <button class="btn btn-primary btn-block" type="submit" style="background: var(--blue);">Log In<i
@@ -166,12 +179,24 @@ function Login($con){
     //Form fields
     const usernameInput = document.getElementById("person_id");
     const passwordInput = document.getElementById("password");
-    const loginForm = document.getElementById('login-form')
+    const loginForm = document.getElementById('login-form');
+    const type = document.getElementsByName('type');
 
     //Intercept submit event and check if both fields are filled else alert user to fill both.
     loginForm.addEventListener('submit', event => {
         if (usernameInput.value === "" || passwordInput.value === "") {
             alert("Please fill both input fields.");
+            event.preventDefault();
+        }
+        flag = false;
+        for(i = 0; i < type.length; i++){
+            if(type[i].checked == true){
+                flag = true;
+                break;
+            }
+        }
+        if(flag == false){
+            alert("Please select a user type.");
             event.preventDefault();
         }
     });
