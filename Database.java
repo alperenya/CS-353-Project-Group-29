@@ -61,7 +61,7 @@ class Database {
                     " ENGINE=InnoDB;";
             stmt.executeUpdate(pharmacists);
 
-            String appointment = "CREATE TABLE examination(" +
+            String appointment = "CREATE TABLE appointment(" +
                     " exam_id CHAR(11) PRIMARY KEY," +
                     " date date NOT NULL)" +
                     " ENGINE=InnoDB;";
@@ -74,7 +74,8 @@ class Database {
 
             String schedule = "CREATE TABLE schedule(" +
                     " date date NOT NULL," +
-                    " occupation_type VARCHAR(20) NOT NULL)" +
+                    " occupation_type VARCHAR(20) NOT NULL," +
+                    " PRIMARY KEY(date)) " +
                     " ENGINE=InnoDB;";
             stmt.executeUpdate(schedule);
 
@@ -122,7 +123,7 @@ class Database {
 
 
             String diseases = "CREATE TABLE diseases(" +
-                    " diseases_id CHAR(11) PRIMARY KEY," +
+                    " disease_id CHAR(11) PRIMARY KEY," +
                     " name VARCHAR(20))" +
                     " ENGINE=InnoDB;";
             stmt.executeUpdate(diseases);
@@ -136,26 +137,42 @@ class Database {
                     " ENGINE=InnoDB;";
             stmt.executeUpdate(symptoms_of);
 
-            /*String appointment_of = "CREATE TABLE appointment_of(" +
+            String appointment_of = "CREATE TABLE appointment_of(" +
                     " exam_id CHAR(11)," +
-                    " PRIMARY KEY (exam_id)," +
+                    " patient_id CHAR(11), " +
+                    " doctor_id CHAR(11), " +
+                    " PRIMARY KEY (exam_id, patient_id, doctor_id)," +
+                    " FOREIGN KEY (doctor_id) references doctors(person_id)," +
+                    " FOREIGN KEY (patient_id) references patients(person_id)," +
                     " FOREIGN KEY (exam_id) references appointment(exam_id))" +
                     " ENGINE=InnoDB;";
             stmt.executeUpdate(appointment_of);
 
             String processed_by = "CREATE TABLE processed_by(" +
                     " prescription_id CHAR(11)," +
-                    " PRIMARY KEY (prescription_id)," +
-                    " FOREIGN KEY (prescription_id) references prescription(prescription_id))ENGINE=InnoDB";
+                    " person_id CHAR(11), " +
+                    " PRIMARY KEY (prescription_id, person_id)," +
+                    " FOREIGN KEY (person_id) references pharmacists(person_id)," +
+                    " FOREIGN KEY (prescription_id) references prescriptions(prescription_id))" +
+                    " ENGINE=InnoDB";
             stmt.executeUpdate(processed_by);
 
             String department_of = "CREATE TABLE department_of(" +
                     " department_name VARCHAR(20)," +
-                    " PRIMARY KEY (department_name)," +
+                    " person_id CHAR(11), " +
+                    " PRIMARY KEY (department_name, person_id)," +
+                    " FOREIGN KEY (person_id) references doctors(person_id)," +
                     " FOREIGN KEY (department_name) references department(department_name))ENGINE=InnoDB";
             stmt.executeUpdate(department_of);
 
-            String schedule_of = "CREATE TABLE schedule_of"; //?
+            String schedule_of = "CREATE TABLE schedule_of(" +
+                    " date date, " +
+                    " person_id CHAR(11), " +
+                    " PRIMARY KEY(date, person_id), " +
+                    " FOREIGN KEY (person_id) references doctors(person_id)," +
+                    " FOREIGN KEY (date) references schedule(date))" +
+                    " ENGINE=InnoDB";
+
             stmt.executeUpdate(schedule_of);
 
             String alternative_drug = "CREATE TABLE alternative_drug(" +
@@ -168,15 +185,17 @@ class Database {
 
             String prescribed = "CREATE TABLE prescribed(" +
                     " prescription_id CHAR(11)," +
-                    " PRIMARY KEY (prescription_id)," +
-                    " FOREIGN KEY (prescription_id) references prescription(prescription_id))ENGINE=InnoDB";
+                    " drug_id CHAR(11), "+
+                    " PRIMARY KEY (prescription_id, drug_id)," +
+                    " FOREIGN KEY (drug_id) references drugs(drug_id), " +
+                    " FOREIGN KEY (prescription_id) references prescriptions(prescription_id))ENGINE=InnoDB";
             stmt.executeUpdate(prescribed);
 
             String test_component = "CREATE TABLE test_component(" +
                     " test_id CHAR(11)," +
                     " name VARCHAR(20)," +
                     " PRIMARY KEY (test_id, name)," +
-                    " FOREIGN KEY (name) references component(name)," +
+                    " FOREIGN KEY (name) references components(name)," +
                     " FOREIGN KEY (test_id) references tests(test_id))ENGINE=InnoDB";
             stmt.executeUpdate(test_component);
 
@@ -198,7 +217,9 @@ class Database {
 
             String done_by = "CREATE TABLE done_by(" +
                     " result_id CHAR(11)," +
-                    " PRIMARY KEY (result_id)," +
+                    " person_id CHAR(11), " +
+                    " PRIMARY KEY (result_id, person_id)," +
+                    " FOREIGN KEY (person_id) references laboratorians(person_id), " +
                     " FOREIGN KEY (result_id) references results(result_id))ENGINE=InnoDB";
             stmt.executeUpdate(done_by);
 
@@ -214,33 +235,41 @@ class Database {
 
             String test_result = "CREATE TABLE test_result(" +
                     " result_id CHAR(11)," +
-                    " prescription_id CHAR(11)," +
-                    " PRIMARY KEY (result_id, prescription_id)," +
-                    " FOREIGN KEY (prescription_id) references prescriptions(prescription_id)," +
+                    " exam_id CHAR(11)," +
+                    " PRIMARY KEY (result_id, exam_id)," +
+                    " FOREIGN KEY (exam_id) references appointment(exam_id)," +
                     " FOREIGN KEY (result_id) references results(result_id))ENGINE=InnoDB";
             stmt.executeUpdate(test_result);
 
             String diagnosis_result = "CREATE TABLE diagnosis_result(" +
-                    "diagnosis_id CHAR(11)," +
-                    "disease_id CHAR(11)," +
-                    "PRIMARY KEY (result_id, disease_id)," +
-                    "FOREIGN KEY (diagnosis_id) references diagnosis(diagnosis_id)," +
-                    "FOREIGN KEY (disease_id) references diseases(disease_id))ENGINE=InnoDB";
+                    " diagnosis_id CHAR(11)," +
+                    " disease_id CHAR(11)," +
+                    " prescription_id CHAR(11)," +
+                    " PRIMARY KEY (diagnosis_id, disease_id, prescription_id)," +
+                    " FOREIGN KEY (prescription_id) references prescriptions(prescription_id)," +
+                    " FOREIGN KEY (diagnosis_id) references diagnosis(diagnosis_id)," +
+                    " FOREIGN KEY (disease_id) references diseases(disease_id))" +
+                    " ENGINE=InnoDB";
             stmt.executeUpdate(diagnosis_result);
 
             String chronic_diseases = "CREATE TABLE chronic_diseases(" +
                     " disease_id CHAR(11)," +
-                    " PRIMARY KEY (disease_id)," +
-                    " FOREIGN KEY (disease_id) references diseases(disease_id))ENGINE=InnoDB";
+                    " person_id CHAR(11)," +
+                    " PRIMARY KEY (disease_id, person_id)," +
+                    " FOREIGN KEY (disease_id) references diseases(disease_id)," +
+                    " FOREIGN KEY (person_id) references patients(person_id))" +
+                    " ENGINE=InnoDB";
             stmt.executeUpdate(chronic_diseases);
 
             stmt.executeUpdate("INSERT INTO persons VALUES ('00000000000', 'Alperen', 'Yalcin', 'Male', '5000000000', 'alperen@email.com', '123456');");
             stmt.executeUpdate("INSERT INTO doctors VALUES ('00000000000', 'aile hekimi' );");
-*/
+
 
             con.close();
+        } catch (SQLException se){
+            se.printStackTrace();
         } catch (Exception e) {
-            System.out.println(e);
+            e.printStackTrace();
         }
     }
 }
