@@ -155,7 +155,7 @@ function Register($con)
         <div class="illustration">
             <h3 style="color: var(--blue);font-weight: bold;font-style: normal;text-align: center;">REGISTER</h3>
         </div>
-        <div class="form-group"><input name="person_id" id="person_id" class="form-control" type="text"
+        <div class="form-group"><input name="person_id" id="person_id" class="form-control" type="text" pattern="[0-9]{11}"
                                        placeholder="Person ID"></div>
         <div class="form-group"><input name="name" id="name" class="form-control" type="text"
                                        placeholder="Name">
@@ -187,10 +187,10 @@ function Register($con)
         <label for="pharmacist">Pharmacist</label><br>
 
         <div style="display: none;" id="pati"> 
-            <div class="form-group"><input name="height" id="height" class="form-control" type="text"
+            <div class="form-group"><input name="height" id="height" class="form-control" type="number"
                                         placeholder="Height">
             </div>
-            <div class="form-group"><input name="weight" id="weight" class="form-control" type="text"
+            <div class="form-group"><input name="weight" id="weight" class="form-control" type="number"
                                         placeholder="Weight">
             </div>
             <label for="birth_date">Birth Date:</label>
