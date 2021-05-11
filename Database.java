@@ -35,8 +35,8 @@ class Database {
             String patients = "CREATE TABLE patients" +
                     "(person_id CHAR(11) PRIMARY KEY, " +
                     " birth_date date, " +
-                    " weight NUMERIC(3,2), " +
-                    " height NUMERIC(3,2), " +
+                    " weight DECIMAL(5,2), " +
+                    " height DECIMAL(5,2), " +
                     " blood_type VARCHAR(10), " +
                     " FOREIGN KEY (person_id) references persons (person_id)) " +
                     " ENGINE=InnoDB;";
@@ -75,7 +75,7 @@ class Database {
             String schedule = "CREATE TABLE schedule(" +
                     " date date NOT NULL," +
                     " occupation_type VARCHAR(20) NOT NULL," +
-                    " PRIMARY KEY(date)) " +
+                    " PRIMARY KEY(date, occupation_type)) " +
                     " ENGINE=InnoDB;";
             stmt.executeUpdate(schedule);
 
@@ -158,17 +158,17 @@ class Database {
             stmt.executeUpdate(processed_by);
 
             String department_of = "CREATE TABLE department_of(" +
-                    " department_name VARCHAR(20)," +
                     " person_id CHAR(11), " +
-                    " PRIMARY KEY (department_name, person_id)," +
+                    " department_name VARCHAR(20)," +
+                    " PRIMARY KEY (person_id, department_name)," +
                     " FOREIGN KEY (person_id) references doctors(person_id)," +
                     " FOREIGN KEY (department_name) references department(department_name))ENGINE=InnoDB";
             stmt.executeUpdate(department_of);
 
             String schedule_of = "CREATE TABLE schedule_of(" +
-                    " date date, " +
                     " person_id CHAR(11), " +
-                    " PRIMARY KEY(date, person_id), " +
+                    " date date, " +
+                    " PRIMARY KEY(person_id, date), " +
                     " FOREIGN KEY (person_id) references doctors(person_id)," +
                     " FOREIGN KEY (date) references schedule(date))" +
                     " ENGINE=InnoDB";
@@ -261,8 +261,24 @@ class Database {
                     " ENGINE=InnoDB";
             stmt.executeUpdate(chronic_diseases);
 
-            stmt.executeUpdate("INSERT INTO persons VALUES ('00000000000', 'Alperen', 'Yalcin', 'Male', '5000000000', 'alperen@email.com', '123456');");
-            stmt.executeUpdate("INSERT INTO doctors VALUES ('00000000000', 'aile hekimi' );");
+            stmt.executeUpdate("INSERT INTO persons VALUES ('10000000000', 'Ali', 'Velioglu', 'Male', '5000000000', 'ali@veli.com', '123456');");
+            stmt.executeUpdate("INSERT INTO persons VALUES ('10000000001', 'Ali', 'Delioglu', 'Male', '5000000001', 'ali@deli.com', '123456');");
+            stmt.executeUpdate("INSERT INTO persons VALUES ('20000000000', 'Ali', 'Velioglu', 'Male', '5000000002', 'ali@veli.com', '123456');");
+            stmt.executeUpdate("INSERT INTO doctors VALUES ('10000000000', 'Professor' );");
+            stmt.executeUpdate("INSERT INTO doctors VALUES ('10000000001', 'Specialist' );");
+            stmt.executeUpdate("INSERT INTO patients VALUES ('10000000001', '2012-01-01', 62, 156, '0 RH+' );");
+            stmt.executeUpdate("INSERT INTO department VALUES ('Internal Medicine');");
+            stmt.executeUpdate("INSERT INTO department VALUES ('Cardiology');");
+            stmt.executeUpdate("INSERT INTO department VALUES ('Neurology');");
+            stmt.executeUpdate("INSERT INTO department_of VALUES ('10000000000', 'Internal Medicine');");
+            stmt.executeUpdate("INSERT INTO department_of VALUES ('10000000001', 'Internal Medicine');");
+            stmt.executeUpdate("INSERT INTO schedule VALUES ('2021-01-01', 'Cancelled');");
+            stmt.executeUpdate("INSERT INTO schedule VALUES ('2021-01-02', 'Cancelled');");
+            stmt.executeUpdate("INSERT INTO schedule_of VALUES ('10000000000','2021-01-02');");
+            stmt.executeUpdate("INSERT INTO schedule_of VALUES ('10000000001','2021-01-02');");
+
+
+
 
 
             con.close();
