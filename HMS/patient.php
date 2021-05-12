@@ -15,6 +15,11 @@ if(isset($_SESSION["newmessage"]) && $_SESSION["newmessage"] === true){
     echo "<script type='text/javascript'>alert('" . $_SESSION["message"] . "');</script>";
     $_SESSION["newmessage"] = false;
 }
+
+//show departments
+$sqlDep = "SELECET department_name FROM department;";
+$resDep = $con->query($sqlDep);
+
 ?>
 
 <!DOCTYPE html>
@@ -50,11 +55,11 @@ if(isset($_SESSION["newmessage"]) && $_SESSION["newmessage"] === true){
                             <h2>Appointments:</h2>
                         </div>
                         <div class="col d-xl-flex justify-content-xl-end align-items-xl-center"><select style="margin-right: 10px;">
-                                <optgroup label="This is a group">
-                                    <option value="12" selected="">Fizik Tedavi</option>
-                                    <option value="13">Kulak, Burun, Boğaz</option>
-                                    <option value="14">Göz</option>
-                                </optgroup>
+                            <optgroup label="This is a group">
+                                <option value="12" selected="">Internal Medicine</option>
+                                <option value="13">Cardiology</option>
+                                <option value="14">Neurology</option>
+                            </optgroup>
                             </select><input type="month" style="margin-right: 10px;"><button class="btn btn-success btn-sm" type="button"><span>New Appointment&nbsp;</span><i class="fa fa-search"></i></button></div>
                     </div>
                 </div>

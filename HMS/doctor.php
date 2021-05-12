@@ -15,6 +15,9 @@ if(isset($_SESSION["newmessage"]) && $_SESSION["newmessage"] === true){
     echo "<script type='text/javascript'>alert('" . $_SESSION["message"] . "');</script>";
     $_SESSION["newmessage"] = false;
 }
+
+
+
 ?>
 
 <!DOCTYPE html>
