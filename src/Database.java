@@ -73,9 +73,9 @@ class Database {
             stmt.executeUpdate(symptoms);
 
             String schedule = "CREATE TABLE schedule(" +
+                    " schedule_id CHAR(11) PRIMARY KEY," +
                     " date date NOT NULL," +
-                    " occupation_type VARCHAR(20) NOT NULL," +
-                    " PRIMARY KEY(date, occupation_type)) " +
+                    " occupation_type VARCHAR(20) NOT NULL)" +
                     " ENGINE=InnoDB;";
             stmt.executeUpdate(schedule);
 
@@ -167,10 +167,10 @@ class Database {
 
             String schedule_of = "CREATE TABLE schedule_of(" +
                     " person_id CHAR(11), " +
-                    " date date, " +
-                    " PRIMARY KEY(person_id, date), " +
+                    " schedule_id CHAR(11), " +
+                    " PRIMARY KEY(person_id, schedule_id), " +
                     " FOREIGN KEY (person_id) references doctors(person_id)," +
-                    " FOREIGN KEY (date) references schedule(date))" +
+                    " FOREIGN KEY (schedule_id) references schedule(schedule_id))" +
                     " ENGINE=InnoDB";
 
             stmt.executeUpdate(schedule_of);
@@ -266,16 +266,22 @@ class Database {
             stmt.executeUpdate("INSERT INTO persons VALUES ('20000000000', 'Ali', 'Velioglu', 'Male', '5000000002', 'ali@veli.com', '123456');");
             stmt.executeUpdate("INSERT INTO doctors VALUES ('10000000000', 'Professor' );");
             stmt.executeUpdate("INSERT INTO doctors VALUES ('10000000001', 'Specialist' );");
-            stmt.executeUpdate("INSERT INTO patients VALUES ('10000000001', '2012-01-01', 62, 156, '0 RH+' );");
+            stmt.executeUpdate("INSERT INTO patients VALUES ('20000000000', '2012-01-01', 62, 156, '0 RH+' );");
             stmt.executeUpdate("INSERT INTO department VALUES ('Internal Medicine');");
             stmt.executeUpdate("INSERT INTO department VALUES ('Cardiology');");
             stmt.executeUpdate("INSERT INTO department VALUES ('Neurology');");
             stmt.executeUpdate("INSERT INTO department_of VALUES ('10000000000', 'Internal Medicine');");
             stmt.executeUpdate("INSERT INTO department_of VALUES ('10000000001', 'Internal Medicine');");
-            stmt.executeUpdate("INSERT INTO schedule VALUES ('2021-01-01', 'Cancelled');");
-            stmt.executeUpdate("INSERT INTO schedule VALUES ('2021-01-02', 'Cancelled');");
-            stmt.executeUpdate("INSERT INTO schedule_of VALUES ('10000000000','2021-01-02');");
-            stmt.executeUpdate("INSERT INTO schedule_of VALUES ('10000000001','2021-01-02');");
+            stmt.executeUpdate("INSERT INTO schedule VALUES ('10000000000','2021-01-01', 'Cancelled');");
+            stmt.executeUpdate("INSERT INTO schedule VALUES ('10000000001','2021-01-01', 'Appoint');");
+            stmt.executeUpdate("INSERT INTO schedule_of VALUES ('10000000000','10000000000');");
+            stmt.executeUpdate("INSERT INTO schedule_of VALUES ('10000000001','10000000001');");
+            stmt.executeUpdate("INSERT INTO appointment VALUES ('10000000000','2021-01-05');");
+            stmt.executeUpdate("INSERT INTO appointment VALUES ('10000000001','2021-01-08');");
+            stmt.executeUpdate("INSERT INTO appointment_of VALUES ('10000000000','20000000000', '10000000000');");
+            stmt.executeUpdate("INSERT INTO appointment_of VALUES ('10000000001','20000000000', '10000000000');");
+
+
 
 
 
