@@ -22,7 +22,7 @@ $id = $_SESSION['person_id'];
 $sqlDep = "SELECET department_name FROM department;";
 $resDep = $con->query($sqlDep);
 
-$sqlApp = "SELECT P.first_name, P.last_name, A.date FROM persons P, appointment A WHERE A.exam_id IN (SELECT exam_id FROM appointment_of WHERE patient_id = '$id' AND doctor_id = P.person_id)";
+$sqlApp = "SELECT D.title, P.first_name, P.last_name, A.date FROM persons P, appointment A, doctors D WHERE A.exam_id IN (SELECT exam_id FROM appointment_of WHERE patient_id = '$id' AND doctor_id = P.person_id AND doctor_id = D.person_id)";
 $resultApp = $con->query($sqlApp);
 
 
@@ -84,7 +84,7 @@ $resultApp = $con->query($sqlApp);
                     <tbody>
                     <?php while($row1 = $resultApp->fetch_assoc()) : ?>
                         <tr>
-                            <td><?php echo $row1["first_name"], " ", $row1["last_name"]; ?></td>
+                            <td><?php echo $row1["title"], " ", $row1["first_name"], " ", $row1["last_name"]; ?></td>
                             <td><?php echo $row1["date"]; ?></td>
                             <td><button class="btn btn-primary btn-sm" type="button"><span>Go To Details&nbsp;</span><i class="fa fa-arrow-right"></i></button></td>
                         </tr>
