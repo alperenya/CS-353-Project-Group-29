@@ -26,7 +26,7 @@ if (array_key_exists("deps", $_POST)){
 $sqlDep = "SELECT department_name FROM department";
 $resDep = $con->query($sqlDep);
 
-$sqlSch = "SELECT DISTINCT date FROM schedule WHERE date NOT IN (SELECT date from schedule WHERE schedule_id IN(SELECT schedule_id FROM schedule_of WHERE person_id IN(SELECT D.person_id FROM doctors D, department_of DE WHERE D.person_id = DE.person_id AND DE.department_name = '$dep')))";
+$sqlSch = "SELECT date from schedule WHERE person_id IN(SELECT D.person_id FROM doctors D, department_of DE WHERE D.person_id = DE.person_id AND DE.department_name = '$dep')";
 $resSch = $con->query($sqlSch);
 
 
