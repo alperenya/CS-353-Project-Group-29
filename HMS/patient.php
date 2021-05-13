@@ -22,11 +22,9 @@ $id = $_SESSION['person_id'];
 $sqlDep = "SELECET department_name FROM department;";
 $resDep = $con->query($sqlDep);
 
-$sqlAppDoc = "SELECT first_name, last_name FROM persons WHERE person_id IN (SELECT doctor_id FROM appointment_of WHERE patient_id = '$id')";
-$resultAppDoc = $con->query($sqlAppDoc);
+$sqlApp = "SELECT P.first_name, P.last_name, A.date FROM persons P, appointment A WHERE A.exam_id IN (SELECT exam_id FROM appointment_of WHERE patient_id = '$id' AND doctor_id = P.person_id)";
+$resultApp = $con->query($sqlApp);
 
-$sqlAppDate = "SELECT date FROM appointment NATURAL JOIN appointment_of WHERE patient_id = '$id'";
-$resultAppDate = $con->query($sqlAppDate);
 
 
 
@@ -84,10 +82,10 @@ $resultAppDate = $con->query($sqlAppDate);
                     </tr>
                     </thead>
                     <tbody>
-                    <?php while($row1 = $resultAppDoc->fetch_assoc() && $row2 = $resultAppDate->fetch_assoc() ) : ?>
+                    <?php while($row1 = $resultApp->fetch_assoc()) : ?>
                         <tr>
                             <td><?php echo $row1["first_name"], " ", $row1["last_name"]; ?></td>
-                            <td><?php echo $row2["date"]; ?></td>
+                            <td><?php echo $row1["date"]; ?></td>
                             <td><button class="btn btn-primary btn-sm" type="button"><span>Go To Details&nbsp;</span><i class="fa fa-arrow-right"></i></button></td>
                         </tr>
 								<?php endwhile; ?>

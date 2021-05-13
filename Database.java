@@ -73,7 +73,7 @@ class Database {
             stmt.executeUpdate(symptoms);
 
             String schedule = "CREATE TABLE schedule(" +
-                    " schedule_id CHAR(11) PRIMARY KEY," +
+                    " schedule_id CHAR(3) PRIMARY KEY," +
                     " date date NOT NULL," +
                     " occupation_type VARCHAR(20) NOT NULL)" +
                     " ENGINE=InnoDB;";
@@ -166,8 +166,8 @@ class Database {
             stmt.executeUpdate(department_of);
 
             String schedule_of = "CREATE TABLE schedule_of(" +
+                    " schedule_id CHAR(3), " +
                     " person_id CHAR(11), " +
-                    " schedule_id CHAR(11), " +
                     " PRIMARY KEY(person_id, schedule_id), " +
                     " FOREIGN KEY (person_id) references doctors(person_id)," +
                     " FOREIGN KEY (schedule_id) references schedule(schedule_id))" +
@@ -270,12 +270,19 @@ class Database {
             stmt.executeUpdate("INSERT INTO department VALUES ('Internal Medicine');");
             stmt.executeUpdate("INSERT INTO department VALUES ('Cardiology');");
             stmt.executeUpdate("INSERT INTO department VALUES ('Neurology');");
-            stmt.executeUpdate("INSERT INTO department_of VALUES ('10000000000', 'Internal Medicine');");
+            stmt.executeUpdate("INSERT INTO department_of VALUES ('10000000000', 'Cardiology');");
             stmt.executeUpdate("INSERT INTO department_of VALUES ('10000000001', 'Internal Medicine');");
-            stmt.executeUpdate("INSERT INTO schedule VALUES ('10000000000','2021-01-01', 'Cancelled');");
-            stmt.executeUpdate("INSERT INTO schedule VALUES ('10000000001','2021-01-01', 'Appoint');");
-            stmt.executeUpdate("INSERT INTO schedule_of VALUES ('10000000000','10000000000');");
-            stmt.executeUpdate("INSERT INTO schedule_of VALUES ('10000000001','10000000001');");
+            stmt.executeUpdate("INSERT INTO schedule VALUES ('010','2021-01-01', 'Cancel');");
+            stmt.executeUpdate("INSERT INTO schedule VALUES ('011','2021-01-01', 'Appointment');");
+            stmt.executeUpdate("INSERT INTO schedule VALUES ('020','2021-01-02', 'Cancel');");
+            stmt.executeUpdate("INSERT INTO schedule VALUES ('021','2021-01-02', 'Appointment');");
+            stmt.executeUpdate("INSERT INTO schedule VALUES ('051','2021-01-05', 'Appointment');");
+            stmt.executeUpdate("INSERT INTO schedule VALUES ('081','2021-01-08', 'Appointment');");
+            stmt.executeUpdate("INSERT INTO schedule_of VALUES ('010','10000000000');");
+            stmt.executeUpdate("INSERT INTO schedule_of VALUES ('020','10000000001');");
+            stmt.executeUpdate("INSERT INTO schedule_of VALUES ('051','10000000000');");
+            stmt.executeUpdate("INSERT INTO schedule_of VALUES ('081','10000000000');");
+            stmt.executeUpdate("INSERT INTO schedule_of VALUES ('081','10000000001');");
             stmt.executeUpdate("INSERT INTO appointment VALUES ('10000000000','2021-01-05');");
             stmt.executeUpdate("INSERT INTO appointment VALUES ('10000000001','2021-01-08');");
             stmt.executeUpdate("INSERT INTO appointment VALUES ('10000000002','2021-01-08');");
