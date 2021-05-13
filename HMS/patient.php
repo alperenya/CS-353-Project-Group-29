@@ -16,9 +16,19 @@ if(isset($_SESSION["newmessage"]) && $_SESSION["newmessage"] === true){
     $_SESSION["newmessage"] = false;
 }
 
+$id = $_SESSION['person_id'];
+
 //show departments
 $sqlDep = "SELECET department_name FROM department;";
 $resDep = $con->query($sqlDep);
+
+$sqlAppDoc = "SELECT first_name, last_name FROM persons WHERE person_id IN (SELECT doctor_id FROM appointment_of WHERE patient_id = '$id')";
+$resultAppDoc = $con->query($sqlAppDoc);
+
+$sqlAppDate = "SELECT date FROM appointment NATURAL JOIN appointment_of WHERE patient_id = '$id'";
+$resultAppDate = $con->query($sqlAppDate);
+
+
 
 ?>
 
@@ -74,21 +84,14 @@ $resDep = $con->query($sqlDep);
                     </tr>
                     </thead>
                     <tbody>
-                    <tr>
-                        <td>Ahmet Ahi</td>
-                        <td>01.02.1997</td>
-                        <td><button class="btn btn-primary btn-sm" type="button"><span>Go To Details&nbsp;</span><i class="fa fa-arrow-right"></i></button></td>
-                    </tr>
-                    <tr>
-                        <td>Alperen Yalcin</td>
-                        <td>03.02.1997</td>
-                        <td><button class="btn btn-primary btn-sm" type="button"><span>Go To Details&nbsp;</span><i class="fa fa-arrow-right"></i></button></td>
-                    </tr>
-                    <tr>
-                        <td>Mehmet Gündoğdu</td>
-                        <td>04.02.1997</td>
-                        <td><button class="btn btn-primary btn-sm" type="button"><span>Go To Details&nbsp;</span><i class="fa fa-arrow-right"></i></button></td>
-                    </tr>
+                    <?php while($row1 = $resultAppDoc->fetch_assoc() && $row2 = $resultAppDate->fetch_assoc() ) : ?>
+                        <tr>
+                            <td><?php echo $row1["first_name"], " ", $row1["last_name"]; ?></td>
+                            <td><?php echo $row2["date"]; ?></td>
+                            <td><button class="btn btn-primary btn-sm" type="button"><span>Go To Details&nbsp;</span><i class="fa fa-arrow-right"></i></button></td>
+                        </tr>
+								<?php endwhile; ?>
+                    
                     <tr>
                         <td>-</td>
                         <td><select>

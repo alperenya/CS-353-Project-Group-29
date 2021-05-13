@@ -263,7 +263,7 @@ class Database {
 
             stmt.executeUpdate("INSERT INTO persons VALUES ('10000000000', 'Ali', 'Velioglu', 'Male', '5000000000', 'ali@veli.com', '123456');");
             stmt.executeUpdate("INSERT INTO persons VALUES ('10000000001', 'Ali', 'Delioglu', 'Male', '5000000001', 'ali@deli.com', '123456');");
-            stmt.executeUpdate("INSERT INTO persons VALUES ('20000000000', 'Ali', 'Velioglu', 'Male', '5000000002', 'ali@veli.com', '123456');");
+            stmt.executeUpdate("INSERT INTO persons VALUES ('20000000000', 'Veli', 'Velioglu', 'Male', '5000000002', 'ali@veli.com', '123456');");
             stmt.executeUpdate("INSERT INTO doctors VALUES ('10000000000', 'Professor' );");
             stmt.executeUpdate("INSERT INTO doctors VALUES ('10000000001', 'Specialist' );");
             stmt.executeUpdate("INSERT INTO patients VALUES ('20000000000', '2012-01-01', 62, 156, '0 RH+' );");
@@ -278,8 +278,10 @@ class Database {
             stmt.executeUpdate("INSERT INTO schedule_of VALUES ('10000000001','10000000001');");
             stmt.executeUpdate("INSERT INTO appointment VALUES ('10000000000','2021-01-05');");
             stmt.executeUpdate("INSERT INTO appointment VALUES ('10000000001','2021-01-08');");
+            stmt.executeUpdate("INSERT INTO appointment VALUES ('10000000002','2021-01-08');");
             stmt.executeUpdate("INSERT INTO appointment_of VALUES ('10000000000','20000000000', '10000000000');");
             stmt.executeUpdate("INSERT INTO appointment_of VALUES ('10000000001','20000000000', '10000000000');");
+            stmt.executeUpdate("INSERT INTO appointment_of VALUES ('10000000002','20000000000', '10000000001');");
 
 
 
