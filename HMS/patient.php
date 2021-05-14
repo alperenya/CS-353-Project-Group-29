@@ -68,7 +68,7 @@ $sqlMakeApp = ""
         <div class="row" style="margin: 0px;">
             <div class="col">
                 <div class="container">
-                    <div class="row" style="margin-top: 10%;">
+                    <div class="row" style="margin-top: 5%;">
                         <div class="col">
                             <div class="row">
                                 <div class="col-xl-5">
