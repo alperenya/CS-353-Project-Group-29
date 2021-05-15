@@ -20,6 +20,7 @@ $id = $_SESSION['person_id'];
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $resMonthPick = ShowSchedule($con, $id);
+    $resMonthPick2 = ShowSchedule2($con, $id);
 }
 
 function ShowSchedule($con, $id)
@@ -28,14 +29,38 @@ function ShowSchedule($con, $id)
         $month = htmlspecialchars($_POST["month"]);
         $month = date("m", strtotime($month));
 
-        $sqlMonthPick = "SELECT IF(occupation_type = 'Cancel', (occupation_type),  (CONCAT(first_name, ' ', last_name))) as 'Patient Name/Cancelled Slot', date
-from persons NATURAL JOIN schedule
-WHERE person_id in (SELECT doctor_id
-                    FROM appointment_of
-                    WHERE doctor_id='$id') and MONTH(date) = '$month';";
+//        $sqlMonthPick = "SELECT IF(occupation_type = 'Cancel', (occupation_type),  (CONCAT(first_name, ' ', last_name))) as 'Patient Name/Cancelled Slot', date
+//from persons NATURAL JOIN schedule
+//WHERE person_id in (SELECT doctor_id
+//                    FROM appointment_of
+//                    WHERE doctor_id='$id') and MONTH(date) = '$month';";
+
+        $sqlMonthPick = "SELECT P.first_name, P.last_name, A.date, A.exam_id
+FROM persons P, appointment A
+WHERE P.person_id IN (SELECT patient_id
+                      FROM appointment_of
+                      WHERE doctor_id = '$id' AND exam_id = A.exam_id) and MONTH(date) = '$month';";
+
         $resMonthPick = $con->query($sqlMonthPick);
         return $resMonthPick;
     }
+}
+
+function ShowSchedule2($con, $id)
+{
+    if (array_key_exists("month", $_POST)) {
+        $month = htmlspecialchars($_POST["month"]);
+        $month = date("m", strtotime($month));
+
+
+        $sqlMonthPick2 = "SELECT occupation_type as 'Patient Name/Cancelled Slot', date
+FROM schedule
+WHERE occupation_type = 'Cancel' and MONTH(date) = '$month';";
+
+        $resMonthPick2 = $con->query($sqlMonthPick2);
+        return $resMonthPick2;
+    }
+
 }
 
 $con->close();
@@ -99,9 +124,19 @@ $con->close();
                 </tr>
                 </thead>
                 <tbody>
-                <?php while ($row1 = $resMonthPick->fetch_assoc()) : ?>
+                <?php while ($row1 = $resMonthPick2->fetch_assoc()) : ?>
                     <tr>
                         <td><?php echo $row1["Patient Name/Cancelled Slot"]; ?></td>
+                        <td><?php echo $row1["date"]; ?></td>
+                        <td>
+                            <button class="btn btn-primary btn-sm" type="button">
+                                <span>Go To Details&nbsp;</span><i class="fa fa-arrow-right"></i></button>
+                        </td>
+                    </tr>
+                <?php endwhile; ?>
+                <?php while ($row1 = $resMonthPick->fetch_assoc()) : ?>
+                    <tr>
+                        <td><?php echo $row1["first_name"], " ", $row1["last_name"]; ?></td>
                         <td><?php echo $row1["date"]; ?></td>
                         <td>
                             <button class="btn btn-primary btn-sm" type="button">
