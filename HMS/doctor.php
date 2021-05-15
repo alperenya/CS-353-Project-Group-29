@@ -18,6 +18,8 @@ if (isset($_SESSION["newmessage"]) && $_SESSION["newmessage"] === true) {
 
 $id = $_SESSION['person_id'];
 
+$resMonthPick = "";
+$resMonthPick2 = "";
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $resMonthPick = ShowSchedule($con, $id);
     $resMonthPick2 = ShowCancel($con, $id);
@@ -62,6 +64,17 @@ WHERE P.person_id IN (SELECT patient_id
         $resMonthPick = $con->query($sqlMonthPick);
         return $resMonthPick;
     }
+    else{
+
+        $sqlMonthPick = "SELECT P.first_name, P.last_name, A.date, exam_id
+FROM persons P, appointment A
+WHERE P.person_id IN (SELECT patient_id
+                      FROM appointment_of
+                      WHERE doctor_id = '$id' AND exam_id = A.exam_id) and MONTH(date) = 1;";
+
+        $resMonthPick = $con->query($sqlMonthPick);
+        return $resMonthPick;
+    }
 }
 
 function ShowCancel($con, $id)
@@ -74,6 +87,14 @@ function ShowCancel($con, $id)
         $sqlMonthPick2 = "SELECT occupation_type, date
 FROM schedule
 WHERE occupation_type = 'Cancel' and MONTH(date) = '$month' and person_id = '$id';";
+
+        $resMonthPick2 = $con->query($sqlMonthPick2);
+        return $resMonthPick2;
+    }
+    else{
+        $sqlMonthPick2 = "SELECT occupation_type, date
+FROM schedule
+WHERE occupation_type = 'Cancel' and MONTH(date) = 1 and person_id = '$id';";
 
         $resMonthPick2 = $con->query($sqlMonthPick2);
         return $resMonthPick2;

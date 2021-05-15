@@ -38,43 +38,48 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 function RemoveSymptom($con){
-    echo $_POST["removesymptom"];
+    $sqlRemoveSymptom = "DELETE FROM symptoms_of WHERE exam_id = '" . $_POST["exam_id"] . "' and name = '" . $_POST["removesymptom"] . "';";
+    $removeSymptomResult = $con->query($sqlRemoveSymptom);
+    if (!$removeSymptomResult) echo $con->connect_error;
 }
 function RemoveDisease($con){
-    echo $_POST["removedisease"];
+    $sqlRemoveDisease = "DELETE FROM diagnosis_result WHERE name = '" . $_POST["removedisease"] . "' and diagnosis_id = (SELECT diagnosis_id FROM examination_result WHERE exam_id = '" . $_POST["exam_id"] ."');";
+    $removeDiseaseResult = $con->query($sqlRemoveDisease);
+    if (!$removeDiseaseResult) echo $con->connect_error;
 }
 function RemoveTest($con){
-    echo $_POST["removetest"];
+    $sqlRemoveTest = "DELETE FROM assigned_tests WHERE exam_id = '" . $_POST["exam_id"] . "' and test_id = '" . $_POST["removetest"] . "';";
+    $removeTestResult = $con->query($sqlRemoveTest);
+    if (!$removeTestResult) echo $con->connect_error;
 }
 function AddSymptom($con)
 {
     $sqlAddSymptom = "INSERT INTO symptoms_of VALUES('" . $_POST["exam_id"] . "', '" . $_POST["symptom"] . "');";
-    echo $sqlAddSymptom;
     $addSymptomResult = $con->query($sqlAddSymptom);
     if (!$addSymptomResult) echo $con->connect_error;
 }
 
 function AddDisease($con)
 {
-    $sqlDianosisID = "SELECT diagnosis_id FROM examination_result WHERE exam_id =" . $_POST["exam_id"] . ";";
+    $sqlDianosisID = "SELECT diagnosis_id FROM examination_result WHERE exam_id ='" . $_POST["exam_id"] . "';";
     $diagnosisIDResult = $con->query($sqlDianosisID);
     if (!$diagnosisIDResult) echo $con->connect_error;
     $diagnosis_id_row = $diagnosisIDResult->fetch_assoc();
 
-    $sqlAddDiagresult = "INSERT INTO diagnosis_result VALUES(" . $diagnosis_id_row["diagnosis_id"] . ", '" . $_POST["disease"] . "', '');";
+    $sqlAddDiagresult = "INSERT INTO diagnosis_result VALUES('" . $diagnosis_id_row["diagnosis_id"] . "', '" . $_POST["disease"] . "', '10000000000');";
     $addSymptomResult = $con->query($sqlAddDiagresult);
     if (!$addSymptomResult) echo $con->connect_error;
 }
 
 function AddTest($con)
 {
-    $sqlAddSymptom = "INSERT INTO assigned_tests VALUES(" . $_POST["test"] . ", " . $_POST["exam_id"] . ");";
-    $addSymptomResult = $con->query($sqlAddSymptom);
-    if (!$addSymptomResult) echo $con->connect_error;
+    $sqlAddTest = "INSERT INTO assigned_tests VALUES('" . $_POST["test"] . "', '" . $_POST["exam_id"] . "');";
+    $addTestResult = $con->query($sqlAddTest);
+    if (!$addTestResult) echo $con->connect_error;
 }
 
 
-$sqlSharedSymptoms = "SELECT name FROM symptoms_of WHERE exam_id = " . $_GET["exam_id"] . ";";
+$sqlSharedSymptoms = "SELECT name FROM symptoms_of WHERE exam_id = " . $exam_id . ";";
 $symptomsResult = $con->query($sqlSharedSymptoms);
 if (!$symptomsResult) echo $con->connect_error;
 
@@ -85,7 +90,7 @@ if (!$allSymptomsResult) echo $con->connect_error;
 $sqlDiagnosedDiseases =
     "SELECT name FROM diagnosis_result WHERE diagnosis_id = 
 (SELECT diagnosis_id FROM diagnosis WHERE diagnosis_id = 
-(SELECT diagnosis_id FROM examination_result WHERE exam_id = '" . $_GET["exam_id"] . "'));";
+(SELECT diagnosis_id FROM examination_result WHERE exam_id = '" . $exam_id . "'));";
 $diagnosisResult = $con->query($sqlDiagnosedDiseases);
 if (!$diagnosisResult) echo $con->connect_error;
 
@@ -93,7 +98,7 @@ $sqlAllDiseases = "SELECT name FROM diseases";
 $allDiseasesResult = $con->query($sqlAllDiseases);
 if (!$allDiseasesResult) echo $con->connect_error;
 
-$sqlAssignedTests = "SELECT name FROM tests WHERE test_id = (SELECT test_id FROM assigned_tests WHERE exam_id = " . $_GET["exam_id"] . ");";
+$sqlAssignedTests = "SELECT * FROM tests WHERE test_id in (SELECT test_id FROM assigned_tests WHERE exam_id = '" . $exam_id . "');";
 $assignedTestsResult = $con->query($sqlAssignedTests);
 if (!$assignedTestsResult) echo $con->connect_error;
 
@@ -125,7 +130,7 @@ if (!$allTestsResult) echo $con->connect_error;
         <div class="collapse navbar-collapse d-xl-flex justify-content-xl-end" id="navcol-1">
             <ul class="navbar-nav">
                 <li class="nav-item">
-                    <a href="<?php echo $_SESSION["type"] == "Doctor" ? "doctor.php" : "patient.php" ?>"
+                    <a href="<?php echo $_SESSION["type"] == "doctor" ? "doctor.php" : "patient.php" ?>"
                        class="btn btn-primary" type="button" style="margin-right: 10px;"><i
                                 class="fa fa-arrow-left" style="margin-left: 5px;"></i>&nbsp;Back
                     </a>
@@ -164,7 +169,7 @@ if (!$allTestsResult) echo $con->connect_error;
                             <form method="post">
                                 <input style="display: none;" name="exam_id" value="<?php echo $exam_id?>">
                                 <input style="display: none;" name="removesymptom" value="<?php echo $row["name"]?>">
-                                <td class='text-right'><button class='btn btn-danger btn-sm' type='submit'><span>Remove&nbsp;</span><i class='fa fa-arrow-right'></i></button></td>
+                                <td class='text-right'><button class='btn btn-danger btn-sm' type='submit'><span>Remove&nbsp;</span><i class='fa fa-times'></i></button></td>
                             </form>
                         <?php echo "</tr>";
                     }
@@ -224,7 +229,7 @@ if (!$allTestsResult) echo $con->connect_error;
                                 <form method="post">
                                     <input style="display: none;" name="exam_id" value="<?php echo $exam_id ?>">
                                     <input style="display: none;" name="removedisease" value="<?php echo $row["name"]?>">
-                                    <td class='text-right'><button class='btn btn-danger btn-sm' type='submit'><span>Remove&nbsp;</span><i class='fa fa-arrow-right'></i></button></td>";
+                                    <td class='text-right'><button class='btn btn-danger btn-sm' type='submit'><span>Remove&nbsp;</span><i class='fa fa-times'></i></button></td>
                                 </form>
                             <?php } ?>
                         </tr>
@@ -282,8 +287,8 @@ if (!$allTestsResult) echo $con->connect_error;
                             <?php if ($_SESSION["type"] == "doctor") {?>
                                 <form method="post">
                                     <input style="display: none;" name="exam_id" value="<?php echo $exam_id ?>">
-                                    <input style="display: none;" name="removetest" value="<?php echo $row["name"]?>">
-                                    <td class='text-right'><button class='btn btn-danger btn-sm' type='submit'><span>Remove&nbsp;</span><i class='fa fa-arrow-right'></i></button></td>";
+                                    <input style="display: none;" name="removetest" value="<?php echo $row["test_id"]?>">
+                                    <td class='text-right'><button class='btn btn-danger btn-sm' type='submit'><span>Remove&nbsp;</span><i class='fa fa-times'></i></button></td>
                                 </form>
                             <?php } ?>
                         </tr>

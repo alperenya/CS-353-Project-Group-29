@@ -283,6 +283,18 @@ class Database {
             stmt.executeUpdate("INSERT INTO examination_result VALUES ('10000000000','10000000000');");
             stmt.executeUpdate("INSERT INTO examination_result VALUES ('10000000001','10000000001');");
             stmt.executeUpdate("INSERT INTO examination_result VALUES ('10000000002','10000000002');");
+            stmt.executeUpdate("INSERT INTO symptoms VALUES ('Coughing');");
+            stmt.executeUpdate("INSERT INTO symptoms VALUES ('Headache');");
+            stmt.executeUpdate("INSERT INTO symptoms VALUES ('Fever');");
+            stmt.executeUpdate("INSERT INTO diseases VALUES ('Covid-19');");
+            stmt.executeUpdate("INSERT INTO diseases VALUES ('Cancer');");
+            stmt.executeUpdate("INSERT INTO diseases VALUES ('Alzheimer');");
+            stmt.executeUpdate("INSERT INTO tests VALUES ('10000000000', 'Blood_Test');");
+            stmt.executeUpdate("INSERT INTO tests VALUES ('10000000001', 'Urine_Test');");
+            stmt.executeUpdate("INSERT INTO tests VALUES ('10000000002', 'MR');");
+            stmt.executeUpdate("INSERT INTO prescriptions VALUES ('10000000000');");
+            stmt.executeUpdate("INSERT INTO prescriptions VALUES ('10000000001');");
+            stmt.executeUpdate("INSERT INTO prescriptions VALUES ('10000000002');");
 
 
 
