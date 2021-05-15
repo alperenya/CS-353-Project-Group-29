@@ -20,7 +20,31 @@ $id = $_SESSION['person_id'];
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $resMonthPick = ShowSchedule($con, $id);
-    $resMonthPick2 = ShowSchedule2($con, $id);
+    $resMonthPick2 = ShowCancel($con, $id);
+    Reenable($con, $id);
+    Cancel($con, $id);
+}
+
+function Reenable($con, $id)
+{
+    if (array_key_exists("date", $_POST)) {
+        $date = htmlspecialchars($_POST["date"]);
+
+        $sqlDate = "DELETE FROM schedule WHERE occupation_type = 'Cancel' and date = '$date' and person_id = '$id'";
+
+        $con->query($sqlDate);
+    }
+}
+
+function Cancel($con, $id)
+{
+    if (array_key_exists("cancelDate", $_POST)) {
+        $date = htmlspecialchars($_POST["cancelDate"]);
+
+        $sqlDate2 = "INSERT INTO schedule VALUES ('$id', '$date', 'Cancel');";
+        
+        $con->query($sqlDate2);
+    }
 }
 
 function ShowSchedule($con, $id)
@@ -28,12 +52,6 @@ function ShowSchedule($con, $id)
     if (array_key_exists("month", $_POST)) {
         $month = htmlspecialchars($_POST["month"]);
         $month = date("m", strtotime($month));
-
-//        $sqlMonthPick = "SELECT IF(occupation_type = 'Cancel', (occupation_type),  (CONCAT(first_name, ' ', last_name))) as 'Patient Name/Cancelled Slot', date
-//from persons NATURAL JOIN schedule
-//WHERE person_id in (SELECT doctor_id
-//                    FROM appointment_of
-//                    WHERE doctor_id='$id') and MONTH(date) = '$month';";
 
         $sqlMonthPick = "SELECT P.first_name, P.last_name, A.date, exam_id
 FROM persons P, appointment A
@@ -46,16 +64,16 @@ WHERE P.person_id IN (SELECT patient_id
     }
 }
 
-function ShowSchedule2($con, $id)
+function ShowCancel($con, $id)
 {
     if (array_key_exists("month", $_POST)) {
         $month = htmlspecialchars($_POST["month"]);
         $month = date("m", strtotime($month));
 
 
-        $sqlMonthPick2 = "SELECT occupation_type as 'Patient Name/Cancelled Slot', date
+        $sqlMonthPick2 = "SELECT occupation_type, date
 FROM schedule
-WHERE occupation_type = 'Cancel' and MONTH(date) = '$month';";
+WHERE occupation_type = 'Cancel' and MONTH(date) = '$month' and person_id = '$id';";
 
         $resMonthPick2 = $con->query($sqlMonthPick2);
         return $resMonthPick2;
@@ -124,18 +142,23 @@ $con->close();
                 </tr>
                 </thead>
                 <tbody>
-                <?php while ($row1 = $resMonthPick2->fetch_assoc()) : ?>
+                <?php
+                while ($resMonthPick2 && $row1 = $resMonthPick2->fetch_assoc()) : ?>
                     <tr>
-                    <tr style="background: rgb(255,151,161);">
-                        <td><?php echo $row1["Patient Name/Cancelled Slot"]; ?></td>
+                    <tr style="background: rgb(255,219,222);">
+                        <td><?php echo $row1["occupation_type"]; ?></td>
                         <td><?php echo $row1["date"]; ?></td>
-                        <td class="text-right">
-                            <button class="btn btn-success btn-sm" type="submit"><span>Re-enable&nbsp;</span><i
-                                        class="fa fa-check"></i></button>
-                        </td>
+                        <form action="" method="post">
+                            <input name="date" style="display: none;" value=<?php echo $row1["date"]; ?>>
+                            <td class="text-right">
+                                <button class="btn btn-success btn-sm" type="submit"><span>Re-enable&nbsp;</span><i
+                                            class="fa fa-check"></i></button>
+                            </td>
+                        </form>
                     </tr>
                 <?php endwhile; ?>
-                <?php while ($row1 = $resMonthPick->fetch_assoc()) : ?>
+                <?php
+                while ($resMonthPick && $row1 = $resMonthPick->fetch_assoc()) : ?>
                     <tr>
                         <td><?php echo $row1["first_name"], " ", $row1["last_name"]; ?></td>
                         <td><?php echo $row1["date"]; ?></td>
@@ -150,11 +173,13 @@ $con->close();
                 <?php endwhile; ?>
                 <tr>
                     <td>Cancel specific date slot:</td>
-                    <td><input type="date"></td>
-                    <td class="text-right">
-                        <button class="btn btn-danger btn-sm" type="button"><span>Cancel Slot&nbsp;</span><i
-                                    class="fa fa-times"></i></button>
-                    </td>
+                    <form action="" method="post">
+                        <td><input type="date" name="cancelDate"></td>
+                        <td class="text-right">
+                            <button class="btn btn-danger btn-sm" type="submit"><span>Cancel Slot&nbsp;</span><i
+                                        class="fa fa-times"></i></button>
+                        </td>
+                    </form>
                 </tr>
                 </tbody>
             </table>
