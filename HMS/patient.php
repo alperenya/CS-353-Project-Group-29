@@ -37,13 +37,16 @@ function Patient($con, $id)
     $row = $resAppNo->fetch_assoc();
     $index = $row["MAX(exam_id)"] + 1;
 
+    $sqlDiaNo = "SELECT MAX(diagnosis_id) FROM diagnosis";
+    $resDiaNo = $con->query($sqlDiaNo);
+    $row = $resDiaNo->fetch_assoc();
+    $indexDia = $row["MAX(diagnosis_id)"] + 1;
+
     $sqlDocNo ='SELECT MAX(D.person_id) FROM doctors D, department_of DE WHERE D.person_id = DE.person_id AND DE.department_name = "'.$_POST["deps"].'";';
     $resDocNo = $con->query($sqlDocNo);
     $row1 = $resDocNo->fetch_assoc();
     $indexDoctor = $row1["MAX(D.person_id)"];
 
-
-    
 
     $date = "";
 
@@ -58,6 +61,14 @@ function Patient($con, $id)
     
     $sqlMakeApp = "INSERT INTO appointment_of VALUES('$index', '$id', '$indexDoctor' );";
     $resMakeApp = $con->query($sqlMakeApp);
+
+    $sqlDiaApp = "INSERT INTO diagnosis VALUES('$indexDia', '');";
+    $resDiaApp = $con->query($sqlDiaApp);
+
+    $sqlDiaRes = "INSERT INTO examination_result VALUES($indexDia, '$index');";
+    $resDiaRes = $con->query($sqlDiaRes);
+
+
 
     
 

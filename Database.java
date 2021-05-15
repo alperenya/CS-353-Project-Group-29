@@ -118,15 +118,15 @@ class Database {
             stmt.executeUpdate(results);
 
             String diagnosis = "CREATE TABLE diagnosis(" +
-                    " diagnosis_id CHAR(11) PRIMARY KEY," +
-                    " comment VARCHAR(300))" +
+                    " diagnosis_id CHAR(11)," +
+                    " comment VARCHAR(300)," +
+                    " PRIMARY KEY(diagnosis_id))" +
                     " ENGINE=InnoDB;";
             stmt.executeUpdate(diagnosis);
 
 
             String diseases = "CREATE TABLE diseases(" +
-                    " disease_id CHAR(11) PRIMARY KEY," +
-                    " name VARCHAR(20))" +
+                    " name VARCHAR(20) PRIMARY KEY)" +
                     " ENGINE=InnoDB;";
             stmt.executeUpdate(diseases);
 
@@ -237,20 +237,20 @@ class Database {
 
             String diagnosis_result = "CREATE TABLE diagnosis_result(" +
                     " diagnosis_id CHAR(11)," +
-                    " disease_id CHAR(11)," +
+                    " name VARCHAR(20)," +
                     " prescription_id CHAR(11)," +
-                    " PRIMARY KEY (diagnosis_id, disease_id, prescription_id)," +
+                    " PRIMARY KEY (diagnosis_id, name, prescription_id)," +
                     " FOREIGN KEY (prescription_id) references prescriptions(prescription_id)," +
                     " FOREIGN KEY (diagnosis_id) references diagnosis(diagnosis_id)," +
-                    " FOREIGN KEY (disease_id) references diseases(disease_id))" +
+                    " FOREIGN KEY (name) references diseases(name))" +
                     " ENGINE=InnoDB";
             stmt.executeUpdate(diagnosis_result);
 
             String chronic_diseases = "CREATE TABLE chronic_diseases(" +
-                    " disease_id CHAR(11)," +
+                    " name VARCHAR(20)," +
                     " person_id CHAR(11)," +
-                    " PRIMARY KEY (disease_id, person_id)," +
-                    " FOREIGN KEY (disease_id) references diseases(disease_id)," +
+                    " PRIMARY KEY (name, person_id)," +
+                    " FOREIGN KEY (name) references diseases(name)," +
                     " FOREIGN KEY (person_id) references patients(person_id))" +
                     " ENGINE=InnoDB";
             stmt.executeUpdate(chronic_diseases);
@@ -277,6 +277,12 @@ class Database {
             stmt.executeUpdate("INSERT INTO appointment_of VALUES ('10000000000','20000000000', '10000000000');");
             stmt.executeUpdate("INSERT INTO appointment_of VALUES ('10000000001','20000000000', '10000000000');");
             stmt.executeUpdate("INSERT INTO appointment_of VALUES ('10000000002','20000000000', '10000000001');");
+            stmt.executeUpdate("INSERT INTO diagnosis VALUES('10000000000', '')");
+            stmt.executeUpdate("INSERT INTO diagnosis VALUES('10000000001', '')");
+            stmt.executeUpdate("INSERT INTO diagnosis VALUES('10000000002', '')");
+            stmt.executeUpdate("INSERT INTO examination_result VALUES ('10000000000','10000000000');");
+            stmt.executeUpdate("INSERT INTO examination_result VALUES ('10000000001','10000000001');");
+            stmt.executeUpdate("INSERT INTO examination_result VALUES ('10000000002','10000000002');");
 
 
 
