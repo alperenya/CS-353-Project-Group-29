@@ -35,7 +35,7 @@ function ShowSchedule($con, $id)
 //                    FROM appointment_of
 //                    WHERE doctor_id='$id') and MONTH(date) = '$month';";
 
-        $sqlMonthPick = "SELECT P.first_name, P.last_name, A.date, A.exam_id
+        $sqlMonthPick = "SELECT P.first_name, P.last_name, A.date, exam_id
 FROM persons P, appointment A
 WHERE P.person_id IN (SELECT patient_id
                       FROM appointment_of
@@ -126,11 +126,12 @@ $con->close();
                 <tbody>
                 <?php while ($row1 = $resMonthPick2->fetch_assoc()) : ?>
                     <tr>
+                    <tr style="background: rgb(255,151,161);">
                         <td><?php echo $row1["Patient Name/Cancelled Slot"]; ?></td>
                         <td><?php echo $row1["date"]; ?></td>
-                        <td>
-                            <button class="btn btn-primary btn-sm" type="button">
-                                <span>Go To Details&nbsp;</span><i class="fa fa-arrow-right"></i></button>
+                        <td class="text-right">
+                            <button class="btn btn-success btn-sm" type="submit"><span>Re-enable&nbsp;</span><i
+                                        class="fa fa-check"></i></button>
                         </td>
                     </tr>
                 <?php endwhile; ?>
@@ -138,20 +139,15 @@ $con->close();
                     <tr>
                         <td><?php echo $row1["first_name"], " ", $row1["last_name"]; ?></td>
                         <td><?php echo $row1["date"]; ?></td>
-                        <td>
-                            <button class="btn btn-primary btn-sm" type="button">
-                                <span>Go To Details&nbsp;</span><i class="fa fa-arrow-right"></i></button>
-                        </td>
+                        <form action="appointment.php" method="get">
+                            <input name="exam_id" style="display: none;" value=<?php echo $row1["exam_id"]; ?>>
+                            <td class="text-right">
+                                <button class="btn btn-primary btn-sm" type="submit" name="detail"><span>Go To Details&nbsp;</span><i
+                                            class="fa fa-arrow-right"></i></button>
+                            </td>
+                        </form>
                     </tr>
                 <?php endwhile; ?>
-                <!--                <tr style="background: rgb(255,151,161);">-->
-                <!--                    <td>Cancelled slot</td>-->
-                <!--                    <td>02.02.1997</td>-->
-                <!--                    <td class="text-right">-->
-                <!--                        <button class="btn btn-success btn-sm" type="button"><span>Re-enable slot&nbsp;</span><i-->
-                <!--                                    class="fa fa-check"></i></button>-->
-                <!--                    </td>-->
-                <!--                </tr>-->
                 <tr>
                     <td>Cancel specific date slot:</td>
                     <td><input type="date"></td>
