@@ -112,8 +112,7 @@ class Database {
 
             String results = "CREATE TABLE results(" +
                     " result_id CHAR(11) PRIMARY KEY," +
-                    " laboratorian_comment VARCHAR(300)," +
-                    " date date NOT NULL)" +
+                    " laboratorian_comment VARCHAR(300))" +
                     " ENGINE=InnoDB;";
             stmt.executeUpdate(results);
 
@@ -303,8 +302,14 @@ class Database {
             stmt.executeUpdate("INSERT INTO test_component VALUES ('10000000000','HGB' );");
             stmt.executeUpdate("INSERT INTO test_component VALUES ('10000000000','LYM' );");
             stmt.executeUpdate("INSERT INTO test_component VALUES ('10000000000','MPV' );");
+            stmt.executeUpdate("INSERT INTO components VALUES ('AXE', 100, 120 );");
+            stmt.executeUpdate("INSERT INTO components VALUES ('MAT', 1, 5 );");
+            stmt.executeUpdate("INSERT INTO components VALUES ('FLE', 68, 96 );");
+            stmt.executeUpdate("INSERT INTO test_component VALUES ('10000000001','AXE' );");
+            stmt.executeUpdate("INSERT INTO test_component VALUES ('10000000001','MAT' );");
+            stmt.executeUpdate("INSERT INTO test_component VALUES ('10000000001','FLE' );");
             stmt.executeUpdate("INSERT INTO assigned_tests VALUES ('10000000000','10000000000' );");
-            stmt.executeUpdate("INSERT INTO results VALUES ('10000000000', ' ',  '2021-01-15');");
+            stmt.executeUpdate("INSERT INTO results VALUES ('10000000000', ' ');");
             stmt.executeUpdate("INSERT INTO test_result VALUES ('10000000000', '10000000000',  'Preparing');");
             stmt.executeUpdate("INSERT INTO done_by VALUES ('10000000000', '30000000000');");
             stmt.executeUpdate("INSERT INTO component_result VALUES ('10000000000', 'HGB', 10);");
