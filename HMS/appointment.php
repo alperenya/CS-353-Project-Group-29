@@ -52,7 +52,8 @@ function RemoveTest($con){
     $removeTestResult = $con->query($sqlRemoveTest);
     if (!$removeTestResult) echo $con->connect_error;
 
-    
+    $resultIndex = $_POST["result_id"];
+
     $sqlRemoveTestRes = "DELETE FROM test_result WHERE result_id = '$resultIndex';";
     $resRemoveTestRes = $con->query($sqlRemoveTestRes);
     $sqlRemoveDoneBy = "DELETE FROM done_by WHERE result_id = '$resultIndex';";
@@ -137,6 +138,11 @@ if (!$allDiseasesResult) echo $con->connect_error;
 $sqlAssignedTests = "SELECT * FROM tests WHERE test_id in (SELECT test_id FROM assigned_tests WHERE exam_id = '" . $exam_id . "');";
 $assignedTestsResult = $con->query($sqlAssignedTests);
 if (!$assignedTestsResult) echo $con->connect_error;
+
+$sqlResultTests = 'SELECT result_id FROM test_result WHERE exam_id = "' . $exam_id . '";';
+$sresResultTests = $con->query($sqlResultTests);
+
+if (!$sresResultTests) echo $con->connect_error;
 
 $sqlAllTests = "SELECT * FROM tests";
 $allTestsResult = $con->query($sqlAllTests);
@@ -317,13 +323,14 @@ if (!$allTestsResult) echo $con->connect_error;
                     </tr>
                     </thead>
                     <tbody>
-                    <?php while ($row = $assignedTestsResult->fetch_assoc()) { ?>
+                    <?php while ($row = $assignedTestsResult->fetch_assoc() && $row2 = $sresResultTests->fetch_assoc()) { ?>
                         <tr>
                             <td><?php echo $row["name"] ?></td>
                             <?php if ($_SESSION["type"] == "doctor") {?>
                                 <form method="post">
                                     <input style="display: none;" name="exam_id" value="<?php echo $exam_id ?>">
                                     <input style="display: none;" name="removetest" value="<?php echo $row["test_id"]?>">
+                                    <input style="display: none;" name="result_id" value="<?php echo $row2["result_id"]?>">
                                     <td class='text-right'><button class='btn btn-danger btn-sm' type='submit'><span>Remove&nbsp;</span><i class='fa fa-times'></i></button></td>
                                 </form>
                             <?php } ?>

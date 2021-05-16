@@ -43,6 +43,7 @@ function Lab($con, $id, $updatedValue, $component, $resultid)
 {
     $sqlUpdate = "UPDATE component_result SET result_value=$updatedValue WHERE result_id='$resultid' and name='$component';";
     $resUpdate = $con->query($sqlUpdate);
+    echo $sqlUpdate;
 
 
 }
@@ -102,13 +103,15 @@ function Lab($con, $id, $updatedValue, $component, $resultid)
                             </tr>
                         </thead>
                         <tbody>
-                        <form method="post" id="patient-form">
 
 
                         <?php $resultid = array();
                                 $sqlTestName = "SELECT result_id, status from test_result WHERE result_id IN(SELECT result_id FROM done_by WHERE person_id = '$id');";
                                 $resTestName = $con->query($sqlTestName);
+                                $i = 1;
                                 while($row1 = $resTestName->fetch_assoc()): array_push($resultid, $row1["result_id"]); ?>
+                                                        <form method="post" id="patient-form">
+
                                 <?php $sqlTest = 'SELECT name from tests WHERE test_id IN(SELECT test_id FROM test_component WHERE name IN (SELECT MAX(name) from component_result WHERE result_id = "' .$row1["result_id"]. '"));';        
                                 $resTest = $con->query($sqlTest);
                                 $rowTest = $resTest->fetch_assoc();?>
@@ -120,7 +123,7 @@ function Lab($con, $id, $updatedValue, $component, $resultid)
 
                                 <td><?php echo $rowTest["name"];?></td>
                                 <td><?php echo $row1["status"];?></td>
-                                <td><select name="comp" id="mySelect" onchange="myFunction()">
+                                <td><select name="comp" id='mySelect<?php echo $i;?>' onchange="myFunction(<?php echo $i;?>)">
                                         
                                         
                                         <?php $sqlComName = 'SELECT name FROM component_result WHERE result_id = "'.$row1["result_id"].'" ;';
@@ -135,12 +138,15 @@ function Lab($con, $id, $updatedValue, $component, $resultid)
                                         </optgroup>
                                         
                                     </select></td>
-                                <td id="demo"></td>
+                                <td id='demo<?php echo $i;?>'></td>
+                                <?php $i = $i + 1;?>
+
                                 <td class="text-right d-xl-flex justify-content-xl-end align-items-xl-center"><input type="text" name="updateValue" style="margin-right: 10px;"><button class="btn btn-primary btn-sm" type="submit"><span>Update Value&nbsp;</span><i class="fa fa-arrow-right"></i></button></td>
                                 
-                                <?php endwhile; ?>
                             </tr>
                             </form>
+                            <?php endwhile; ?>
+
                         </tbody>
                     </table>
                 </div>
@@ -178,14 +184,16 @@ function Lab($con, $id, $updatedValue, $component, $resultid)
     <?php } ?>
 
 <script>
-    function myFunction() {
+    function myFunction(i) {
         var passedArray = 
         <?php echo json_encode($resultComponent); ?>;
-        var x = document.getElementById("mySelect").value.substring(0,11);
+        var x = document.getElementById("mySelect" + i).value.substring(0,11);
         console.log(x);
-        var y = document.getElementById("mySelect").value.substring(11,14);
+        var y = document.getElementById("mySelect" + i).value.substring(11,14);
         console.log(y);
-        document.getElementById("demo").innerHTML = passedArray[x][y];
+        document.getElementById("demo" + i).innerHTML = passedArray[x][y];
+        console.log(i);
+
     }
 </script>
 </body>
