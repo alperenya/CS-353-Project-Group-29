@@ -38,35 +38,45 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 function RemoveSymptom($con){
-    $sqlRemoveSymptom = "DELETE FROM symptoms_of WHERE exam_id = '" . $_POST["exam_id"] . "' and name = '" . $_POST["removesymptom"] . "';";
+    $sqlRemoveSymptom ='DELETE FROM symptoms_of WHERE exam_id = "' . $_POST["exam_id"] . '" and name = "' . $_POST["removesymptom"] . '";';
     $removeSymptomResult = $con->query($sqlRemoveSymptom);
     if (!$removeSymptomResult) echo $con->connect_error;
 }
 function RemoveDisease($con){
-    $sqlRemoveDisease = "DELETE FROM diagnosis_result WHERE name = '" . $_POST["removedisease"] . "' and diagnosis_id = (SELECT diagnosis_id FROM examination_result WHERE exam_id = '" . $_POST["exam_id"] ."');";
+    $sqlRemoveDisease = 'DELETE FROM diagnosis_result WHERE name = "' . $_POST["removedisease"] . '" and diagnosis_id = (SELECT diagnosis_id FROM examination_result WHERE exam_id = "' . $_POST["exam_id"] .'");';
     $removeDiseaseResult = $con->query($sqlRemoveDisease);
     if (!$removeDiseaseResult) echo $con->connect_error;
 }
 function RemoveTest($con){
-    $sqlRemoveTest = "DELETE FROM assigned_tests WHERE exam_id = '" . $_POST["exam_id"] . "' and test_id = '" . $_POST["removetest"] . "';";
+    $sqlRemoveTest = 'DELETE FROM assigned_tests WHERE exam_id = "' . $_POST["exam_id"] . '" and test_id = "' . $_POST["removetest"] . '";';
     $removeTestResult = $con->query($sqlRemoveTest);
     if (!$removeTestResult) echo $con->connect_error;
+
+    
+    $sqlRemoveTestRes = "DELETE FROM test_result WHERE result_id = '$resultIndex';";
+    $resRemoveTestRes = $con->query($sqlRemoveTestRes);
+    $sqlRemoveDoneBy = "DELETE FROM done_by WHERE result_id = '$resultIndex';";
+    $resRemoveDoneBy = $con->query($sqlRemoveDoneBy);
+    $sqlRemoveComRes = "DELETE FROM component_result WHERE result_id = '$resultIndex';";
+    $resRemoveComRes = $con->query($sqlRemoveComRes);
+    $sqlRemoveRes = "DELETE FROM results WHERE result_id = '$resultIndex';";
+    $ResRemoveRes = $con->query($sqlRemoveRes);
 }
 function AddSymptom($con)
 {
-    $sqlAddSymptom = "INSERT INTO symptoms_of VALUES('" . $_POST["exam_id"] . "', '" . $_POST["symptom"] . "');";
+    $sqlAddSymptom = 'INSERT INTO symptoms_of VALUES("' . $_POST["exam_id"] . '", "' . $_POST["symptom"] . '");';
     $addSymptomResult = $con->query($sqlAddSymptom);
     if (!$addSymptomResult) echo $con->connect_error;
 }
 
 function AddDisease($con)
 {
-    $sqlDianosisID = "SELECT diagnosis_id FROM examination_result WHERE exam_id ='" . $_POST["exam_id"] . "';";
+    $sqlDianosisID = 'SELECT diagnosis_id FROM examination_result WHERE exam_id ="' . $_POST["exam_id"] . '";';
     $diagnosisIDResult = $con->query($sqlDianosisID);
     if (!$diagnosisIDResult) echo $con->connect_error;
     $diagnosis_id_row = $diagnosisIDResult->fetch_assoc();
 
-    $sqlAddDiagresult = "INSERT INTO diagnosis_result VALUES('" . $diagnosis_id_row["diagnosis_id"] . "', '" . $_POST["disease"] . "', '10000000000');";
+    $sqlAddDiagresult = 'INSERT INTO diagnosis_result VALUES("' . $diagnosis_id_row["diagnosis_id"] . '", "' . $_POST["disease"] . '", "10000000000");';
     $addSymptomResult = $con->query($sqlAddDiagresult);
     if (!$addSymptomResult) echo $con->connect_error;
 }
@@ -84,20 +94,20 @@ function AddTest($con)
     $labIndex = $row1["person_id"];
 
 
-    $sqlAddTest = "INSERT INTO assigned_tests VALUES('" . $_POST["test"] . "', '" . $_POST["exam_id"] . "');";
+    $sqlAddTest = 'INSERT INTO assigned_tests VALUES("' . $_POST["test"] . '", "' . $_POST["exam_id"] . '");';
     $addTestResult = $con->query($sqlAddTest);
     if (!$addTestResult) echo $con->connect_error;
 
     $sqlRes = "INSERT INTO results VALUES ('$resultIndex', ' ');";
     $ResRes = $con->query($sqlRes);
-    $sqlTestRes = "INSERT INTO test_result VALUES ('$resultIndex', '" . $_POST["exam_id"] . "',  'Assigned');";
+    $sqlTestRes = 'INSERT INTO test_result VALUES ("'.$resultIndex.'", "' . $_POST["exam_id"] . '",  "Assigned");';
     $resTestRes = $con->query($sqlTestRes);
     $sqlDoneBy = "INSERT INTO done_by VALUES ('$resultIndex', '$labIndex');";
     $resDoneBy = $con->query($sqlDoneBy);
-    $sqlTestComp = "SELECT name FROM test_component WHERE test_id = '" . $_POST["test"] . "';";
+    $sqlTestComp = 'SELECT name FROM test_component WHERE test_id = "' . $_POST["test"] . '";';
     $resTestComp = $con->query($sqlTestComp);
     while($row2 = $resTestComp->fetch_assoc()):
-        $sqlComRes = "INSERT INTO component_result VALUES ('$resultIndex', '".$row2["name"]."', -1);";
+        $sqlComRes = 'INSERT INTO component_result VALUES ("'.$resultIndex.'", "'.$row2["name"].'", -1);';
         $resComRes = $con->query($sqlComRes);
     endwhile;
 

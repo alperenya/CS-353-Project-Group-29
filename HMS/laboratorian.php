@@ -47,8 +47,8 @@ function Lab($con, $id, $updatedValue, $component, $resultid)
 
 }
 
-$sqlTestName = "SELECT T.name, R.status, R.result_id  From tests T, test_result R WHERE T.test_id IN(SELECT test_id FROM assigned_tests WHERE exam_id IN(SELECT exam_id FROM appointment WHERE exam_id IN(SELECT exam_id FROM test_result WHERE result_id IN( SELECT result_id FROM done_by WHERE person_id = '$id'))));";
-$resTestName = $con->query($sqlTestName);
+//$sqlTestName = "SELECT T.name, R.status, R.result_id  From tests T, test_result R WHERE T.test_id IN(SELECT test_id FROM assigned_tests WHERE exam_id IN(SELECT exam_id FROM appointment WHERE exam_id IN(SELECT exam_id FROM test_result WHERE result_id IN( SELECT result_id FROM done_by WHERE person_id = '$id'))));";
+//$resTestName = $con->query($sqlTestName);
 
 ?>
 
@@ -90,37 +90,41 @@ $resTestName = $con->query($sqlTestName);
                         </div>
                     </div>
                 </div>
-            </div>
-            <div class="table-responsive">
-                <table class="table table-hover">
-                    <thead>
-                    <tr>
-                        <th>Test Name:</th>
-                        <th>Status</th>
-                        <th>Components</th>
-                        <th>Component Value</th>
-                        <th class="text-right">Action</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <form method="post" id="patient-form">
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Test Name:</th>
+                                <th>Status</th>
+                                <th>Components</th>
+                                <th>Component Value</th>
+                                <th class="text-right">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        <form method="post" id="patient-form">
 
-                        <tr><?php
-                            $resultid = array();
-                            while ($row1 = $resTestName->fetch_assoc()):
 
-                            array_push($resultid, $row1["result_id"]); ?>
-                            <td><?php echo $row1["name"]; ?></td>
-                            <td><?php echo $row1["status"]; ?></td>
-                            <td><select name="comp" id="mySelect" onchange="myFunction()">
-                                    <?php if ($row1["status"] == "Finalized"): ?>
-                                        <optgroup label="Available slots:">
-                                            <option></option>
-                                        </optgroup>
-                                    <?php else: ?>
+                        <?php $resultid = array();
+                                $sqlTestName = "SELECT result_id, status from test_result WHERE result_id IN(SELECT result_id FROM done_by WHERE person_id = '$id');";
+                                $resTestName = $con->query($sqlTestName);
+                                while($row1 = $resTestName->fetch_assoc()): array_push($resultid, $row1["result_id"]); ?>
+                                <?php $sqlTest = 'SELECT name from tests WHERE test_id IN(SELECT test_id FROM test_component WHERE name IN (SELECT MAX(name) from component_result WHERE result_id = "' .$row1["result_id"]. '"));';        
+                                $resTest = $con->query($sqlTest);
+                                $rowTest = $resTest->fetch_assoc();?>
 
-                                        <?php $sqlComName = 'SELECT name FROM component_result WHERE result_id = "' . $row1["result_id"] . '" ;';
-                                        $resComName = $con->query($sqlComName); ?>
+
+
+                            <tr>
+
+
+                                <td><?php echo $rowTest["name"];?></td>
+                                <td><?php echo $row1["status"];?></td>
+                                <td><select name="comp" id="mySelect" onchange="myFunction()">
+                                        
+                                        
+                                        <?php $sqlComName = 'SELECT name FROM component_result WHERE result_id = "'.$row1["result_id"].'" ;';
+                                        $resComName = $con->query($sqlComName);?>
                                         <optgroup label="Available slots:">
                                             <?php
                                             foreach ($resComName as $m) {
@@ -129,21 +133,17 @@ $resTestName = $con->query($sqlTestName);
                                                 <?php
                                             } ?>
                                         </optgroup>
-
-                                    <?php endif; ?>
-                                </select></td>
-                            <td id="demo"></td>
-                            <td class="text-right d-xl-flex justify-content-xl-end align-items-xl-center"><input
-                                        type="text" name="updateValue" style="margin-right: 10px;">
-                                <button class="btn btn-primary btn-sm" type="submit"><span>Update Value&nbsp;</span><i
-                                            class="fa fa-arrow-right"></i></button>
-                            </td>
-                        </tr>
-                    </form>
-                    <?php endwhile; ?>
-                    </tr>
-                    </tbody>
-                </table>
+                                        
+                                    </select></td>
+                                <td id="demo"></td>
+                                <td class="text-right d-xl-flex justify-content-xl-end align-items-xl-center"><input type="text" name="updateValue" style="margin-right: 10px;"><button class="btn btn-primary btn-sm" type="submit"><span>Update Value&nbsp;</span><i class="fa fa-arrow-right"></i></button></td>
+                                
+                                <?php endwhile; ?>
+                            </tr>
+                            </form>
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </div>
@@ -172,17 +172,19 @@ $resTestName = $con->query($sqlTestName);
 <?php foreach ($resultid as $r) { ?>
     <?php $sqlComVal = 'SELECT name, result_value FROM component_result WHERE result_id = "' . $r . '";';
     $resComVal = $con->query($sqlComVal);
-    while ($row1 = $resComVal->fetch_assoc()):
-        $resultComponent[$r][$row1["name"]] = $row1["result_value"];
-    endwhile; ?>
-<?php } ?>
+    while($row2 = $resComVal->fetch_assoc()):
+        $resultComponent[$r][$row2["name"]] = $row2["result_value"]; 
+    endwhile;?>
+    <?php } ?>
 
 <script>
     function myFunction() {
-        var passedArray =
-            <?php echo json_encode($resultComponent); ?>;
-        var x = document.getElementById("mySelect").value.substring(0, 11);
-        var y = document.getElementById("mySelect").value.substring(11, 14);
+        var passedArray = 
+        <?php echo json_encode($resultComponent); ?>;
+        var x = document.getElementById("mySelect").value.substring(0,11);
+        console.log(x);
+        var y = document.getElementById("mySelect").value.substring(11,14);
+        console.log(y);
         document.getElementById("demo").innerHTML = passedArray[x][y];
     }
 </script>
