@@ -19,6 +19,39 @@ if(isset($_SESSION["newmessage"]) && $_SESSION["newmessage"] === true){
     echo "<script type='text/javascript'>alert('" . $_SESSION["message"] . "');</script>";
     $_SESSION["newmessage"] = false;
 }
+
+$id = $_SESSION['person_id'];
+$updatedValue = "";
+$component = "";
+$resultid = "";
+
+if (array_key_exists("updateValue", $_POST)){
+    $updatedValue = htmlspecialchars($_POST["updateValue"]);
+}
+
+if (array_key_exists("comp", $_POST)){
+    $resultid = substr(htmlspecialchars($_POST["comp"]), 0, 11);
+    $component = substr(htmlspecialchars($_POST["comp"]), 11, 3);
+}
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    Lab($con, $id, $updatedValue, $component, $resultid);
+}
+
+
+function Lab($con, $id, $updatedValue, $component, $resultid)
+{
+    $sqlUpdate = "UPDATE component_result SET result_value=$updatedValue WHERE result_id='$resultid' and name='$component';";
+    $resUpdate = $con->query($sqlUpdate);
+
+    
+
+
+}
+
+$sqlTestName = "SELECT T.name, R.status, R.result_id  From tests T, test_result R WHERE T.test_id IN(SELECT test_id FROM assigned_tests WHERE exam_id IN(SELECT exam_id FROM appointment WHERE exam_id IN(SELECT exam_id FROM test_result WHERE result_id IN( SELECT result_id FROM done_by WHERE person_id = '$id'))));";
+$resTestName = $con->query($sqlTestName);
+
 ?>
 
 <!DOCTYPE html>
@@ -39,7 +72,7 @@ if(isset($_SESSION["newmessage"]) && $_SESSION["newmessage"] === true){
         <div class="container-fluid"><a class="navbar-brand" href="#" style="font-weight: bold;color: var(--blue);">Hospital Management System</a><button data-toggle="collapse" class="navbar-toggler" data-target="#navcol-1"><span class="sr-only">Toggle navigation</span><span class="navbar-toggler-icon"></span></button>
             <div class="collapse navbar-collapse d-xl-flex justify-content-xl-end" id="navcol-1">
                 <ul class="navbar-nav">
-                    <li class="nav-item"><button class="btn btn-primary" type="button">Log Out<i class="fa fa-sign-out" style="margin-left: 5px;"></i></button></li>
+                    <li class="nav-item"><a href="logout.php" button class="btn btn-primary" type="button">Log Out<i class="fa fa-sign-out" style="margin-left: 5px;"></i></a></li>
                 </ul>
             </div>
         </div>
@@ -68,44 +101,37 @@ if(isset($_SESSION["newmessage"]) && $_SESSION["newmessage"] === true){
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <td>Blood test</td>
-                                <td>Assigned</td>
-                                <td><select>
+                        <form method="post" id="patient-form">
+
+                            <tr><?php $resultid = array();
+                                while($row1 = $resTestName->fetch_assoc()): array_push($resultid, $row1["result_id"]); ?>
+                                <td><?php echo $row1["name"];?></td>
+                                <td><?php echo $row1["status"];?></td>
+                                <td><select name="comp" id="mySelect" onchange="myFunction()">
+                                        <?php if($row1["status"] == "Finalized"): ?>
                                         <optgroup label="Available slots:">
-                                            <option value="12" selected="">Component 1</option>
-                                            <option value="13">Date 2</option>
-                                            <option value="14">Date 3</option>
+                                            <option></option>
                                         </optgroup>
-                                    </select></td>
-                                <td>Component 1 Value</td>
-                                <td class="text-right d-xl-flex justify-content-xl-end align-items-xl-center"><input type="text" style="margin-right: 10px;"><button class="btn btn-primary btn-sm" type="button"><span>Update Value&nbsp;</span><i class="fa fa-arrow-right"></i></button></td>
-                            </tr>
-                            <tr>
-                                <td>Blood test</td>
-                                <td>Preparing</td>
-                                <td><select>
+                                        <?php else: ?>
+                                        
+                                        <?php $sqlComName = 'SELECT name FROM component_result WHERE result_id = "'.$row1["result_id"].'" ;';
+                                        $resComName = $con->query($sqlComName);?>
                                         <optgroup label="Available slots:">
-                                            <option value="12" selected="">Component 1</option>
-                                            <option value="13">Date 2</option>
-                                            <option value="14">Date 3</option>
+                                        <?php
+                                        foreach($resComName as $m)
+                                        {
+                                        ?>
+                                            <option value="<?php echo $row1['result_id'].$m['name'];?>"><?php echo $m['name'];?></option>
+                                        <?php
+                                        }?>
                                         </optgroup>
+                                        
+                                        <?php endif; ?>
                                     </select></td>
-                                <td>Component 1 Value</td>
-                                <td class="text-right d-xl-flex justify-content-xl-end align-items-xl-center"><input type="text" style="margin-right: 10px;"><button class="btn btn-primary btn-sm" type="button"><span>Update Value&nbsp;</span><i class="fa fa-arrow-right"></i></button></td>
-                            </tr>
-                            <tr>
-                                <td>Urine test</td>
-                                <td>Finalized</td>
-                                <td><select>
-                                        <optgroup label="Available slots:">
-                                            <option value="12" selected="">Component 1</option>
-                                            <option value="13">Date 2</option>
-                                            <option value="14">Date 3</option>
-                                        </optgroup>
-                                    </select></td>
-                                <td>Component 1 Value</td>
-                                <td class="text-right d-xl-flex justify-content-xl-end align-items-xl-center"><input type="text" style="margin-right: 10px;"><button class="btn btn-primary btn-sm" type="button"><span>Update Value&nbsp;</span><i class="fa fa-arrow-right"></i></button></td>
+                                <td id="demo"></td>
+                                <td class="text-right d-xl-flex justify-content-xl-end align-items-xl-center"><input type="text" name="updateValue" style="margin-right: 10px;"><button class="btn btn-primary btn-sm" type="submit"><span>Update Value&nbsp;</span><i class="fa fa-arrow-right"></i></button></td>
+                                </form>
+                                <?php endwhile; ?>
                             </tr>
                         </tbody>
                     </table>
@@ -128,6 +154,24 @@ if(isset($_SESSION["newmessage"]) && $_SESSION["newmessage"] === true){
     </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.6.0/js/bootstrap.bundle.min.js"></script>
+    <?php $resultComponent = array()?>
+    <?php foreach($resultid as $r){?>
+    <?php $sqlComVal = 'SELECT name, result_value FROM component_result WHERE result_id = "'. $r .'";';
+    $resComVal = $con->query($sqlComVal);
+    while($row1 = $resComVal->fetch_assoc()):
+        $resultComponent[$r][$row1["name"]] = $row1["result_value"]; 
+    endwhile;?>
+    <?php } ?>
+
+    <script>
+    function myFunction() {
+        var passedArray = 
+        <?php echo json_encode($resultComponent); ?>;
+        var x = document.getElementById("mySelect").value.substring(0,11);
+        var y = document.getElementById("mySelect").value.substring(11,14);
+        document.getElementById("demo").innerHTML = passedArray[x][y];
+    }
+    </script>
 </body>
 
 </html>
