@@ -7,9 +7,10 @@ session_start();
 //If the request method is post, register the user using the form values.
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     Register($con);
+    $con->close();
+header("location: index.php");
 }
 
-$con->close();
 
 function Register($con)
 {

@@ -73,9 +73,35 @@ function AddDisease($con)
 
 function AddTest($con)
 {
+    $sqlResId = "SELECT MAX(result_id) FROM results";
+    $resResId = $con->query($sqlResId);
+    $row = $resResId->fetch_assoc();
+    $resultIndex = $row["MAX(result_id)"] + 1;
+
+    $sqlLabId = "SELECT person_id FROM laboratorians ORDER BY RAND() LIMIT 1;";
+    $resLabId = $con->query($sqlLabId);
+    $row1 = $resLabId->fetch_assoc();
+    $labIndex = $row1["person_id"];
+
+
     $sqlAddTest = "INSERT INTO assigned_tests VALUES('" . $_POST["test"] . "', '" . $_POST["exam_id"] . "');";
     $addTestResult = $con->query($sqlAddTest);
     if (!$addTestResult) echo $con->connect_error;
+
+    $sqlRes = "INSERT INTO results VALUES ('$resultIndex', ' ');";
+    $ResRes = $con->query($sqlRes);
+    $sqlTestRes = "INSERT INTO test_result VALUES ('$resultIndex', '" . $_POST["exam_id"] . "',  'Assigned');";
+    $resTestRes = $con->query($sqlTestRes);
+    $sqlDoneBy = "INSERT INTO done_by VALUES ('$resultIndex', '$labIndex');";
+    $resDoneBy = $con->query($sqlDoneBy);
+    $sqlTestComp = "SELECT name FROM test_component WHERE test_id = '" . $_POST["test"] . "';";
+    $resTestComp = $con->query($sqlTestComp);
+    while($row2 = $resTestComp->fetch_assoc()):
+        $sqlComRes = "INSERT INTO component_result VALUES ('$resultIndex', '".$row2["name"]."', -1);";
+        $resComRes = $con->query($sqlComRes);
+    endwhile;
+
+
 }
 
 
