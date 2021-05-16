@@ -99,8 +99,8 @@ class Database {
 
             String components = "CREATE TABLE components(" +
                     " name VARCHAR(20) PRIMARY KEY," +
-                    " interval_high NUMERIC(3,2)," +
-                    " interval_low NUMERIC(3,2))" +
+                    " interval_high DECIMAL(5,2)," +
+                    " interval_low DECIMAL(5,2))" +
                     " ENGINE=InnoDB;";
             stmt.executeUpdate(components);
 
@@ -220,8 +220,7 @@ class Database {
             String component_result = "CREATE TABLE component_result(" +
                     " result_id CHAR(11)," +
                     " name VARCHAR(20)," +
-                    " status VARCHAR(20)," +
-                    " result_value VARCHAR(20)," +
+                    " result_value DECIMAL(5,2)," +
                     " PRIMARY KEY (name, result_id)," +
                     " FOREIGN KEY (name) references components(name)," +
                     " FOREIGN KEY (result_id) references results(result_id))ENGINE=InnoDB";
@@ -230,6 +229,7 @@ class Database {
             String test_result = "CREATE TABLE test_result(" +
                     " result_id CHAR(11)," +
                     " exam_id CHAR(11)," +
+                    " status VARCHAR(20)," +
                     " PRIMARY KEY (result_id, exam_id)," +
                     " FOREIGN KEY (exam_id) references appointment(exam_id)," +
                     " FOREIGN KEY (result_id) references results(result_id))ENGINE=InnoDB";
@@ -258,6 +258,8 @@ class Database {
             stmt.executeUpdate("INSERT INTO persons VALUES ('10000000000', 'Ali', 'Velioglu', 'Male', '5000000000', 'ali@veli.com', '123456');");
             stmt.executeUpdate("INSERT INTO persons VALUES ('10000000001', 'Ali', 'Delioglu', 'Male', '5000000001', 'ali@deli.com', '123456');");
             stmt.executeUpdate("INSERT INTO persons VALUES ('20000000000', 'Veli', 'Velioglu', 'Male', '5000000002', 'ali@veli.com', '123456');");
+            stmt.executeUpdate("INSERT INTO persons VALUES ('30000000000', 'Veli', 'Lab', 'Male', '5000000002', 'ali@veli.com', '123456');");
+            stmt.executeUpdate("INSERT INTO laboratorians VALUES ('30000000000');");
             stmt.executeUpdate("INSERT INTO doctors VALUES ('10000000000', 'Professor' );");
             stmt.executeUpdate("INSERT INTO doctors VALUES ('10000000001', 'Specialist' );");
             stmt.executeUpdate("INSERT INTO patients VALUES ('20000000000', '2012-01-01', 62, 156, '0 RH+' );");
@@ -295,7 +297,19 @@ class Database {
             stmt.executeUpdate("INSERT INTO prescriptions VALUES ('10000000000');");
             stmt.executeUpdate("INSERT INTO prescriptions VALUES ('10000000001');");
             stmt.executeUpdate("INSERT INTO prescriptions VALUES ('10000000002');");
-
+            stmt.executeUpdate("INSERT INTO components VALUES ('HGB', 10, 18 );");
+            stmt.executeUpdate("INSERT INTO components VALUES ('LYM', 15, 50 );");
+            stmt.executeUpdate("INSERT INTO components VALUES ('MPV', 0, 15 );");
+            stmt.executeUpdate("INSERT INTO test_component VALUES ('10000000000','HGB' );");
+            stmt.executeUpdate("INSERT INTO test_component VALUES ('10000000000','LYM' );");
+            stmt.executeUpdate("INSERT INTO test_component VALUES ('10000000000','MPV' );");
+            stmt.executeUpdate("INSERT INTO assigned_tests VALUES ('10000000000','10000000000' );");
+            stmt.executeUpdate("INSERT INTO results VALUES ('10000000000', ' ',  '2021-01-15');");
+            stmt.executeUpdate("INSERT INTO test_result VALUES ('10000000000', '10000000000',  'Preparing');");
+            stmt.executeUpdate("INSERT INTO done_by VALUES ('10000000000', '30000000000');");
+            stmt.executeUpdate("INSERT INTO component_result VALUES ('10000000000', 'HGB', 10);");
+            stmt.executeUpdate("INSERT INTO component_result VALUES ('10000000000', 'LYM', 12);");
+            stmt.executeUpdate("INSERT INTO component_result VALUES ('10000000000', 'MPV', -1);");
 
 
 
