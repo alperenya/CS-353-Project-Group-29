@@ -43,8 +43,6 @@ function Lab($con, $id, $updatedValue, $component, $resultid)
 {
     $sqlUpdate = "UPDATE component_result SET result_value=$updatedValue WHERE result_id='$resultid' and name='$component';";
     $resUpdate = $con->query($sqlUpdate);
-    echo $sqlUpdate;
-
 
 }
 
